@@ -165,7 +165,7 @@
                 </div>
                 <div>
                     <span class="block text-base font-semibold text-goldAccent">ส่องกล้องเตือนสิ่งกีดขวาง &amp; ป้าย</span>
-                    <span class="block text-xs text-textSecondary mt-0.5">คน • สัตว์ • รถ • ป้ายเตือนต่างๆ • ป้ายรถเมล์</span>
+                    <span class="block text-xs text-textSecondary mt-0.5">เสา • รั้ว • ฟุตบาท • ทางต่างระดับ • ป้ายเตือน</span>
                 </div>
             </button>
 
@@ -350,7 +350,7 @@
             <div class="flex items-center justify-between pb-4 border-b border-borderLuxury">
                 <div>
                     <h2 id="hazard-modal-title" class="text-lg font-semibold text-textPrimary">ส่องกล้องเตือนสิ่งกีดขวาง &amp; ป้าย</h2>
-                    <p class="text-xs text-textSecondary mt-0.5">กรองความแม่นยำสูง ≥ 65% • ป้ายเตือน • ป้ายรถเมล์</p>
+                    <p class="text-xs text-textSecondary mt-0.5">AI ≥ 65% + ตรวจจับโครงสร้าง &amp; ทางต่างระดับ</p>
                 </div>
                 <button type="button" onclick="hapticTap(); closeHazardScannerModal()" aria-label="ปิดกล้องส่องทาง"
                     class="min-w-[48px] min-h-[48px] rounded-2xl bg-surfaceElevated hover:bg-white/10 text-textPrimary text-base font-semibold flex items-center justify-center cursor-pointer border border-borderLuxury">
@@ -364,7 +364,7 @@
                 <canvas id="hazard-overlay-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none"></canvas>
                 <!-- กรอบเล็งป้ายตรงกลางหน้าจอ -->
                 <div class="absolute inset-x-10 inset-y-8 border-2 border-dashed border-goldAccent/55 rounded-xl pointer-events-none flex items-end justify-center pb-1">
-                    <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งป้ายเตือนหรือป้ายรถเมล์ในกรอบนี้</span>
+                    <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งสิ่งกีดขวาง ป้ายเตือน หรือป้ายรถเมล์</span>
                 </div>
                 <div class="scanner-laser" aria-hidden="true"></div>
 
@@ -382,7 +382,7 @@
             <!-- แท็กวัตถุและป้ายที่ตรวจพบ -->
             <div class="mt-3 bg-obsidian/70 border border-borderLuxury rounded-2xl p-3">
                 <div id="detected-objects-badges" class="flex flex-wrap gap-1.5 min-h-[26px] items-center">
-                    <span class="text-xs text-textSecondary">กำลังสแกนสิ่งกีดขวาง (ความมั่นใจ ≥ 65%)...</span>
+                    <span class="text-xs text-textSecondary">กำลังสแกนสิ่งกีดขวางและทางเดิน...</span>
                 </div>
             </div>
 
@@ -418,13 +418,13 @@
                         class="min-h-[44px] px-3 py-2 rounded-xl bg-obsidian hover:bg-white/5 border border-borderLuxury text-textPrimary text-left cursor-pointer">
                         🚏 ป้ายรถเมล์
                     </button>
-                    <button type="button" onclick="hapticTap(); triggerSimulatedHazard('ระวัง รถยนต์และมอเตอร์ไซค์ขวางทาง')" 
+                    <button type="button" onclick="hapticTap(); triggerSimulatedHazard('ระวัง ฟุตบาทและทางต่างระดับข้างหน้า')" 
                         class="min-h-[44px] px-3 py-2 rounded-xl bg-obsidian hover:bg-white/5 border border-borderLuxury text-textPrimary text-left cursor-pointer">
-                        🚗 รถยนต์ / มอเตอร์ไซค์
+                        🛣️ ฟุตบาท / ทางต่างระดับ
                     </button>
-                    <button type="button" onclick="hapticTap(); triggerSimulatedHazard('ระวัง สุนัขและสิ่งกีดขวางข้างหน้า')" 
+                    <button type="button" onclick="hapticTap(); triggerSimulatedHazard('ระวัง เสาไฟฟ้าและรั้วเหล็กขวางทาง')" 
                         class="min-h-[44px] px-3 py-2 rounded-xl bg-obsidian hover:bg-white/5 border border-borderLuxury text-textPrimary text-left cursor-pointer">
-                        🐕 สัตว์ / สิ่งกีดขวาง
+                        ⚡ เสาไฟฟ้า / รั้วเหล็ก
                     </button>
                 </div>
             </div>
@@ -598,7 +598,7 @@
             { system: 'BRT', line: 'สาทร–ราชพฤกษ์', name: 'BRT ราชพฤกษ์', exit: 'ทางเชื่อมสกายวอล์ก BTS ตลาดพลู', lat: 13.71452, lng: 100.47681 }
         ];
 
-        // พจนานุกรมคัดกรองเฉพาะ "สิ่งกีดขวางและอันตรายในการเดินทาง" (Whitelist เท่านั้น เพื่อตัดคำทายผิดเช่น sandwich, train, cake ออกทั้งหมด)
+        // 1. พจนานุกรมคัดกรองวัตถุจากโมเดล COCO-SSD (Whitelist เฉพาะสิ่งกีดขวางในการเดินทาง)
         const OBJECT_THAI_MAP = {
             'person': { th: 'คนเดินขวางทาง', icon: '🚶', danger: true },
             'bicycle': { th: 'รถจักรยาน', icon: '🚲', danger: true },
@@ -610,16 +610,33 @@
             'fire hydrant': { th: 'หัวจ่ายน้ำดับเพลิง', icon: '🧯', danger: true },
             'stop sign': { th: 'ป้ายหยุดจราจร', icon: '🛑', danger: true },
             'parking meter': { th: 'เสาป้ายเตือนริมทาง', icon: '⚠️', danger: true },
-            'bench': { th: 'ม้านั่งหรือที่นั่งรอรถ', icon: '🚏', danger: true },
+            'bench': { th: 'รั้วกั้นหรือที่นั่งริมทาง', icon: '🚧', danger: true },
             'cat': { th: 'แมว', icon: '🐈', danger: true },
             'dog': { th: 'สุนัข', icon: '🐕', danger: true },
             'suitcase': { th: 'กระเป๋าเดินทางขวางทาง', icon: '🧳', danger: true },
             'chair': { th: 'เก้าอี้ขวางทาง', icon: '🪑', danger: true },
             'couch': { th: 'โซฟาขวางทาง', icon: '🛋️', danger: true },
-            'potted plant': { th: 'กระถางต้นไม้บนทางเดิน', icon: '🪴', danger: true },
+            'potted plant': { th: 'กระถางต้นไม้หรือพุ่มไม้', icon: '🪴', danger: true },
             'bed': { th: 'เตียง', icon: '🛏️', danger: true },
             'dining table': { th: 'โต๊ะขวางทาง', icon: '🪵', danger: true },
-            'refrigerator': { th: 'ตู้ทรงสูงขวางทาง', icon: '🗄️', danger: true }
+            'refrigerator': { th: 'ตู้หรือชั้นวางของทรงสูง', icon: '🗄️', danger: true }
+        };
+
+        // 2. รายชื่อสิ่งกีดขวางเชิงโครงสร้างและทางเดิน (ตรวจจับจากขอบภาพ/สี/ระดับพื้น)
+        const EXTENDED_HAZARD_LABELS = {
+            'pole_or_post': { th: 'เสาไฟฟ้า', icon: '⚡', danger: true },
+            'hedge_fence': { th: 'รั้วต้นไม้', icon: '🌿', danger: true },
+            'clothesline_rack': { th: 'ราวตากผ้า', icon: '👕', danger: true },
+            'metal_fence': { th: 'รั้วเหล็ก', icon: '🚧', danger: true },
+            'trash_bin': { th: 'ถังขยะ', icon: '🗑️', danger: true },
+            'wall': { th: 'กำแพง', icon: '🧱', danger: true },
+            'shelf_rack': { th: 'ชั้นวางของ', icon: '🗄️', danger: true },
+            'locker_cubby': { th: 'ช่องใส่ของ', icon: '📦', danger: true },
+            'door': { th: 'ประตู', icon: '🚪', danger: true },
+            'glass_door': { th: 'ประตูกระจกใส', icon: '🪟', danger: true },
+            'curb_sidewalk': { th: 'ฟุตบาท', icon: '🛣️', danger: true },
+            'step_level': { th: 'ทางต่างระดับ', icon: '🪜', danger: true },
+            'steep_slope': { th: 'ทางลาดชัน', icon: '📐', danger: true }
         };
 
         // กฎจำแนกป้ายเฉพาะ "ป้ายเตือนต่างๆ" และ "ป้ายรถเมล์" เท่านั้น
@@ -654,7 +671,7 @@
         let isScanningFrame = false;
         let isOcrRunning = false;
 
-        // ตัวแปรยืนยันความนิ่งของเฟรม (Temporal Stability) ป้องกันการทายผิดชั่ววูบ
+        // ตัวแปรยืนยันความนิ่งของเฟรม (Temporal Stability)
         let previousFrameClasses = new Set();
 
         // ตัวแปรควบคุมระบบเสียงพูดแบบป้องกันค้างบนมือถือ (Mobile Anti-Stuck TTS)
@@ -701,7 +718,6 @@
             if (cocoModel || isModelLoading || typeof cocoSsd === 'undefined') return;
             isModelLoading = true;
             try {
-                // ใช้ mobilenet_v2 ตัวเต็ม เพื่อลดอาการทายผิด (เช่น หมอนเป็นแซนวิช)
                 cocoModel = await cocoSsd.load({ base: 'mobilenet_v2' });
             } catch (e) {
                 console.warn('โหลดโมเดลตัวเต็มไม่สำเร็จ กำลังใช้ตัวสำรอง:', e);
@@ -1302,7 +1318,7 @@
         }
 
         // =====================================================================
-        // 6. โหมดส่องกล้องเตือนสิ่งกีดขวาง (ความแม่นยำ >= 65% + กรอง Whitelist + ยืนยัน 2 เฟรม)
+        // 6. โหมดส่องกล้องเตือนสิ่งกีดขวาง (AI >= 65% + วิเคราะห์โครงสร้าง/ทางต่างระดับ)
         // =====================================================================
         async function openHazardScannerModal() {
             const modal = document.getElementById('hazard-scanner-modal');
@@ -1340,7 +1356,7 @@
                 video.srcObject = hazardStream;
 
                 video.onloadeddata = () => {
-                    scanStatus.innerText = 'กำลังสแกน (ความมั่นใจ ≥ 65%)';
+                    scanStatus.innerText = 'กำลังสแกนสิ่งกีดขวางเรียลไทม์';
                     runFastHazardDetection(true);
 
                     hazardScanInterval = setInterval(() => {
@@ -1442,7 +1458,6 @@
                     .replace(/\s+/g, ' ')
                     .trim();
 
-                // กรองความมั่นใจ OCR สูงขึ้น (65% สำหรับอัตโนมัติ, 50% สำหรับกดปุ่มสแกนทันที)
                 const minConfidence = manualTrigger ? 50 : 65;
                 if (confidence >= minConfidence && cleanSignText.length >= 2) {
                     const lowerText = cleanSignText.toLowerCase();
@@ -1481,6 +1496,120 @@
             }
         }
 
+        // ฟังก์ชันเสริม: ตรวจจับสิ่งกีดขวางเชิงโครงสร้าง เสา รั้ว ราวตากผ้า ชั้นวางของ ฟุตบาท ทางต่างระดับ ประตูกระจก
+        function detectStructuralObstaclesFromVideo(video) {
+            const findings = [];
+            if (!video || video.readyState < 2) return findings;
+
+            try {
+                const sw = 120;
+                const sh = 90;
+                const sampleCanvas = document.createElement('canvas');
+                sampleCanvas.width = sw;
+                sampleCanvas.height = sh;
+                const sctx = sampleCanvas.getContext('2d', { willReadFrequently: true });
+                sctx.drawImage(video, 0, 0, sw, sh);
+
+                const { data } = sctx.getImageData(0, 0, sw, sh);
+                const lum = new Float32Array(sw * sh);
+                let greenPixels = 0;
+                let brightPixels = 0;
+                let darkPixels = 0;
+
+                for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+                    const r = data[i], g = data[i + 1], b = data[i + 2];
+                    lum[p] = 0.299 * r + 0.587 * g + 0.114 * b;
+                    if (g > r + 14 && g > b + 8) greenPixels++;
+                    if (lum[p] > 215) brightPixels++;
+                    if (lum[p] < 55) darkPixels++;
+                }
+
+                let verticalEdges = 0;
+                let horizontalEdges = 0;
+                let lowerHorizontalEdges = 0;
+                let diagonalEdges = 0;
+
+                for (let y = 1; y < sh - 1; y++) {
+                    for (let x = 1; x < sw - 1; x++) {
+                        const idx = y * sw + x;
+                        const gx = Math.abs(lum[idx + 1] - lum[idx - 1]);
+                        const gy = Math.abs(lum[idx + sw] - lum[idx - sw]);
+
+                        if (gx > 34) verticalEdges++;
+                        if (gy > 34) {
+                            horizontalEdges++;
+                            if (y > sh * 0.52) lowerHorizontalEdges++;
+                        }
+                        if (gx > 28 && gy > 28) diagonalEdges++;
+                    }
+                }
+
+                const totalPx = sw * sh;
+                const greenRatio = greenPixels / totalPx;
+                const brightRatio = brightPixels / totalPx;
+                const darkRatio = darkPixels / totalPx;
+
+                // 1. รั้วต้นไม้ (พื้นที่สีเขียวหนาแน่นร่วมกับขอบใบไม้)
+                if (greenRatio > 0.26 && (verticalEdges + horizontalEdges) > 420) {
+                    findings.push({ key: 'hedge_fence', ...EXTENDED_HAZARD_LABELS.hedge_fence, dir: 'ตรงหน้า' });
+                }
+                // 2. ราวตากผ้า (เส้นขอบแนวนอนและแนวตั้งถี่จำนวนมาก)
+                else if (horizontalEdges > 520 && verticalEdges > 280) {
+                    findings.push({ key: 'clothesline_rack', ...EXTENDED_HAZARD_LABELS.clothesline_rack, dir: 'ตรงหน้า' });
+                }
+                // 3. รั้วเหล็ก / ราวกั้น (เส้นขอบแนวนอนขนานเด่นชัด)
+                else if (horizontalEdges > 460 && verticalEdges >= 140) {
+                    findings.push({ key: 'metal_fence', ...EXTENDED_HAZARD_LABELS.metal_fence, dir: 'ตรงหน้า' });
+                }
+
+                // 4. ฟุตบาท / ทางต่างระดับ / ทางลาดชัน (ขอบตัดแนวนอนหรือแนวเฉียงในครึ่งล่างของภาพ)
+                if (findings.length === 0 && lowerHorizontalEdges > 230) {
+                    if (diagonalEdges > 360) {
+                        findings.push({ key: 'steep_slope', ...EXTENDED_HAZARD_LABELS.steep_slope, dir: 'ข้างหน้า' });
+                    } else if (lowerHorizontalEdges > 310) {
+                        findings.push({ key: 'curb_sidewalk', ...EXTENDED_HAZARD_LABELS.curb_sidewalk, dir: 'ข้างหน้า' });
+                    } else {
+                        findings.push({ key: 'step_level', ...EXTENDED_HAZARD_LABELS.step_level, dir: 'ข้างหน้า' });
+                    }
+                }
+
+                // 5. เสาไฟฟ้า / เสาคอนกรีต (เส้นขอบแนวตั้งเด่นชัด)
+                if (findings.length === 0 && verticalEdges > 310 && horizontalEdges < 230) {
+                    findings.push({ key: 'pole_or_post', ...EXTENDED_HAZARD_LABELS.pole_or_post, dir: 'ตรงหน้า' });
+                }
+
+                // 6. ถังขยะ (วัตถุทรงทึบสีเข้ม/สดตรงกลางล่าง)
+                if (findings.length === 0 && darkRatio > 0.35 && verticalEdges > 190 && horizontalEdges > 160) {
+                    findings.push({ key: 'trash_bin', ...EXTENDED_HAZARD_LABELS.trash_bin, dir: 'ตรงหน้า' });
+                }
+
+                // 7. ประตูกระจกใส (พื้นผิวเรียบสะท้อนแสงสว่างบางส่วนพร้อมเส้นกรอบ)
+                if (findings.length === 0 && brightRatio > 0.16 && brightRatio < 0.58 && (verticalEdges + horizontalEdges) > 170) {
+                    findings.push({ key: 'glass_door', ...EXTENDED_HAZARD_LABELS.glass_door, dir: 'ตรงหน้า' });
+                }
+
+                // 8. ชั้นวางของ / ช่องใส่ของ / ประตู / กำแพง (โครงสร้างกรอบสี่เหลี่ยมชัดเจน)
+                if (findings.length === 0 && (verticalEdges + horizontalEdges) > 210) {
+                    if (verticalEdges > 220 && horizontalEdges > 200) {
+                        findings.push({ key: 'locker_cubby', ...EXTENDED_HAZARD_LABELS.locker_cubby, dir: 'ตรงหน้า' });
+                    } else if (verticalEdges > horizontalEdges) {
+                        findings.push({ key: 'door', ...EXTENDED_HAZARD_LABELS.door, dir: 'ตรงหน้า' });
+                    } else {
+                        findings.push({ key: 'shelf_rack', ...EXTENDED_HAZARD_LABELS.shelf_rack, dir: 'ตรงหน้า' });
+                    }
+                }
+
+                // 9. กำแพงทึบระยะประชิด (หน้าจอกล้องถูกบังด้วยพื้นผิวเรียบขนาดใหญ่)
+                if (findings.length === 0 && (verticalEdges + horizontalEdges) < 65 && (brightRatio > 0.45 || darkRatio > 0.45)) {
+                    findings.push({ key: 'wall', ...EXTENDED_HAZARD_LABELS.wall, dir: 'ตรงหน้า' });
+                }
+            } catch (e) {
+                console.warn('Structural detection error:', e);
+            }
+
+            return findings;
+        }
+
         async function runFastHazardDetection(manualTrigger = false) {
             const video = document.getElementById('hazard-video');
             const overlay = document.getElementById('hazard-overlay-canvas');
@@ -1489,27 +1618,33 @@
 
             if (!video || !video.srcObject || video.readyState < 2) {
                 if (manualTrigger) {
-                    triggerSimulatedHazard('พบป้ายเตือนและรถยนต์ข้างหน้า');
+                    triggerSimulatedHazard('พบป้ายเตือนและสิ่งกีดขวางข้างหน้า');
                 }
                 return;
             }
 
-            if (isScanningFrame || !cocoModel) return;
+            if (isScanningFrame) return;
             isScanningFrame = true;
 
             const t0 = performance.now();
             try {
-                // 1. ส่งค่า AI_MIN_CONFIDENCE (0.65 = 65%) เข้าไปกรองตั้งแต่ระดับโมเดล
-                const rawPredictions = await cocoModel.detect(video, 5, AI_MIN_CONFIDENCE);
+                // 1. กรองวัตถุจากโมเดลหลักเฉพาะความมั่นใจ >= 65%
+                let validPredictions = [];
+                if (cocoModel) {
+                    const rawPredictions = await cocoModel.detect(video, 5, AI_MIN_CONFIDENCE);
+                    validPredictions = rawPredictions.filter(pred => {
+                        return pred.score >= AI_MIN_CONFIDENCE && Object.prototype.hasOwnProperty.call(OBJECT_THAI_MAP, pred.class);
+                    });
+                }
+
+                // 2. หากโมเดลหลักยังไม่พบวัตถุใน 80 คลาส ให้เรียกตัวตรวจจับสิ่งกีดขวางเชิงโครงสร้างเสริมทันที
+                const structuralItems = validPredictions.length === 0
+                    ? detectStructuralObstaclesFromVideo(video)
+                    : [];
+
                 const elapsedMs = Math.round(performance.now() - t0);
-
-                // 2. กรองเฉพาะคลาสที่อยู่ใน OBJECT_THAI_MAP (ตัด sandwich, train, cake ฯลฯ ออก 100%)
-                // และตรวจความมั่นใจ >= 65% อีกครั้ง
-                const validPredictions = rawPredictions.filter(pred => {
-                    return pred.score >= AI_MIN_CONFIDENCE && Object.prototype.hasOwnProperty.call(OBJECT_THAI_MAP, pred.class);
-                });
-
-                scanStatus.innerText = `สแกน (${elapsedMs} ms) • ยืนยัน ${validPredictions.length} รายการ (≥65%)`;
+                const totalFound = validPredictions.length + structuralItems.length;
+                scanStatus.innerText = `สแกน (${elapsedMs} ms) • พบ ${totalFound} รายการ`;
 
                 overlay.width = video.videoWidth || 640;
                 overlay.height = video.videoHeight || 480;
@@ -1525,80 +1660,83 @@
                 }
 
                 const currentFrameClasses = new Set();
+                const allAlertItems = [];
 
-                if (validPredictions.length > 0) {
-                    const confirmedDangerItems = [];
-                    const allConfirmedNames = [];
+                // ประมวลผลวัตถุจาก COCO-SSD (>= 65%)
+                validPredictions.forEach(pred => {
+                    const [x, y, w, h] = pred.bbox;
+                    const info = OBJECT_THAI_MAP[pred.class];
+                    const scorePct = Math.round(pred.score * 100);
+                    currentFrameClasses.add(pred.class);
 
-                    validPredictions.forEach(pred => {
-                        const [x, y, w, h] = pred.bbox;
-                        const info = OBJECT_THAI_MAP[pred.class];
-                        const scorePct = Math.round(pred.score * 100);
-                        currentFrameClasses.add(pred.class);
+                    const isStableObject = previousFrameClasses.has(pred.class) || pred.score >= 0.78 || manualTrigger;
 
-                        // ตรวจสอบว่าวัตถุนี้เคยเห็นในเฟรมที่แล้วด้วยหรือไม่ (หรือความมั่นใจสูงมาก >= 80%)
-                        const isStableObject = previousFrameClasses.has(pred.class) || pred.score >= 0.80 || manualTrigger;
+                    const centerX = (x + (w / 2)) / overlay.width;
+                    let directionText = 'ตรงหน้า';
+                    if (centerX < 0.35) directionText = 'ทางซ้าย';
+                    else if (centerX > 0.65) directionText = 'ทางขวา';
 
-                        // คำนวณทิศทาง ซ้าย / ตรงหน้า / ขวา
-                        const centerX = (x + (w / 2)) / overlay.width;
-                        let directionText = 'ตรงหน้า';
-                        if (centerX < 0.35) directionText = 'ทางซ้าย';
-                        else if (centerX > 0.65) directionText = 'ทางขวา';
+                    const boxColor = info.danger ? '#e2c07d' : '#5eead4';
+                    ctx.strokeStyle = boxColor;
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(x, y, w, h);
 
-                        const boxColor = info.danger ? '#e2c07d' : '#5eead4';
-                        ctx.strokeStyle = boxColor;
-                        ctx.lineWidth = 3;
-                        ctx.strokeRect(x, y, w, h);
+                    const labelText = `${info.th} ${scorePct}%`;
+                    ctx.font = 'bold 14px Prompt, sans-serif';
+                    const textWidth = ctx.measureText(labelText).width;
+                    ctx.fillStyle = 'rgba(11, 15, 23, 0.88)';
+                    ctx.fillRect(x, Math.max(0, y - 24), textWidth + 12, 24);
+                    ctx.fillStyle = boxColor;
+                    ctx.fillText(labelText, x + 6, Math.max(17, y - 6));
 
-                        const labelText = `${info.th} ${scorePct}%`;
-                        ctx.font = 'bold 14px Prompt, sans-serif';
-                        const textWidth = ctx.measureText(labelText).width;
-                        ctx.fillStyle = 'rgba(11, 15, 23, 0.88)';
-                        ctx.fillRect(x, Math.max(0, y - 24), textWidth + 12, 24);
-                        ctx.fillStyle = boxColor;
-                        ctx.fillText(labelText, x + 6, Math.max(17, y - 6));
-
-                        if (isStableObject) {
-                            const itemWithDir = `${info.th}${directionText}`;
-                            if (!allConfirmedNames.includes(itemWithDir)) allConfirmedNames.push(itemWithDir);
-                            if (info.danger && !confirmedDangerItems.includes(itemWithDir)) confirmedDangerItems.push(itemWithDir);
-                        }
-
-                        const badge = document.createElement('span');
-                        badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surfaceElevated border border-borderLuxury text-xs text-textPrimary';
-                        badge.innerText = `${info.icon} ${info.th} (${scorePct}%)`;
-                        badgesContainer.appendChild(badge);
-                    });
-
-                    previousFrameClasses = currentFrameClasses;
-
-                    if (allConfirmedNames.length > 0) {
-                        const topItems = (confirmedDangerItems.length > 0 ? confirmedDangerItems : allConfirmedNames).slice(0, 2);
-                        const shortAlertText = confirmedDangerItems.length > 0
-                            ? `ระวัง ${topItems.join(' และ ')}`
-                            : `พบ ${topItems.join(' และ ')}`;
-
-                        document.getElementById('hazard-alert-text').innerText = shortAlertText;
-
-                        const timeSinceLastFinish = Date.now() - lastSpeechFinishedAt;
-                        const isNewAlert = shortAlertText !== lastSpokenHazardText;
-
-                        if (manualTrigger || (!isCurrentlySpeaking && (isNewAlert ? timeSinceLastFinish > 700 : timeSinceLastFinish > 3500))) {
-                            lastSpokenHazardText = shortAlertText;
-                            if (confirmedDangerItems.length > 0 && navigator.vibrate) {
-                                navigator.vibrate([140, 60, 140]);
-                            }
-                            speakThaiText(shortAlertText, manualTrigger);
-                        }
+                    if (isStableObject) {
+                        allAlertItems.push(`${info.th}${directionText}`);
                     }
-                } else {
-                    previousFrameClasses.clear();
-                    if (!latestDetectedSignText || Date.now() >= latestDetectedSignExpires) {
-                        badgesContainer.innerHTML = '<span class="text-xs text-tealAccent">เส้นทางโล่ง ไม่พบสิ่งกีดขวาง (ความมั่นใจ ≥ 65%)</span>';
-                        document.getElementById('hazard-alert-text').innerText = 'เส้นทางข้างหน้าปลอดภัย';
-                        if (manualTrigger) {
-                            speakThaiText('เส้นทางข้างหน้าปลอดภัย ไม่พบสิ่งกีดขวางครับ', true);
+
+                    const badge = document.createElement('span');
+                    badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surfaceElevated border border-borderLuxury text-xs text-textPrimary';
+                    badge.innerText = `${info.icon} ${info.th} (${scorePct}%)`;
+                    badgesContainer.appendChild(badge);
+                });
+
+                // ประมวลผลสิ่งกีดขวางเชิงโครงสร้าง (เสา รั้ว ฟุตบาท ทางต่างระดับ ประตูกระจก ฯลฯ)
+                structuralItems.forEach(item => {
+                    currentFrameClasses.add(item.key);
+                    const isStableStruct = previousFrameClasses.has(item.key) || manualTrigger;
+
+                    if (isStableStruct) {
+                        allAlertItems.push(`${item.th}${item.dir}`);
+                    }
+
+                    const badge = document.createElement('span');
+                    badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400/50 text-xs text-amber-200 font-medium';
+                    badge.innerText = `${item.icon} ${item.th} (${item.dir})`;
+                    badgesContainer.appendChild(badge);
+                });
+
+                previousFrameClasses = currentFrameClasses;
+
+                if (allAlertItems.length > 0) {
+                    const uniqueTopItems = [...new Set(allAlertItems)].slice(0, 2);
+                    const shortAlertText = `ระวัง ${uniqueTopItems.join(' และ ')}`;
+
+                    document.getElementById('hazard-alert-text').innerText = shortAlertText;
+
+                    const timeSinceLastFinish = Date.now() - lastSpeechFinishedAt;
+                    const isNewAlert = shortAlertText !== lastSpokenHazardText;
+
+                    if (manualTrigger || (!isCurrentlySpeaking && (isNewAlert ? timeSinceLastFinish > 500 : timeSinceLastFinish > 2000))) {
+                        lastSpokenHazardText = shortAlertText;
+                        if (navigator.vibrate) {
+                            navigator.vibrate([150, 60, 150]);
                         }
+                        speakThaiText(shortAlertText, manualTrigger);
+                    }
+                } else if (!latestDetectedSignText || Date.now() >= latestDetectedSignExpires) {
+                    badgesContainer.innerHTML = '<span class="text-xs text-tealAccent">เส้นทางโล่ง ไม่พบสิ่งกีดขวาง</span>';
+                    document.getElementById('hazard-alert-text').innerText = 'เส้นทางข้างหน้าปลอดภัย';
+                    if (manualTrigger) {
+                        speakThaiText('เส้นทางข้างหน้าปลอดภัย ไม่พบสิ่งกีดขวางครับ', true);
                     }
                 }
             } catch (e) {
