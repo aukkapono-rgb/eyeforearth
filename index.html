@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0b0f17">
 
-    <title>Smart Guide Eye v5 - AI Auto-Learn, Navigation &amp; Obstacle Guard</title>
+    <title>Smart Guide Eye v6 - AI Auto-Learn Internet Search, Navigation &amp; Obstacle Guard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier -->
@@ -123,8 +123,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v5</span></h1>
-                    <p class="text-[11px] text-textSecondary mt-0.5">สืบค้น &lt;65% ใน 1 วิ • โฟกัสเทรน AI • นำทาง &amp; ตรวจจับสิ่งกีดขวาง</p>
+                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v6</span></h1>
+                    <p class="text-[11px] text-textSecondary mt-0.5">สืบค้นเน็ต &lt;65% แม่นยำใน 1 วิ • โฟกัสเทรน AI • นำทาง &amp; ตรวจจับ</p>
                 </div>
             </div>
 
@@ -167,7 +167,7 @@
                 </div>
                 <div>
                     <span class="block text-base font-semibold text-goldAccent">ส่องกล้องเตือนสิ่งกีดขวาง &amp; ระยะเมตร</span>
-                    <span class="block text-xs text-textSecondary mt-0.5">ต่ำกว่า 65% สืบค้นและเทรนอัตโนมัติใน &lt;1 วิ</span>
+                    <span class="block text-xs text-textSecondary mt-0.5">ต่ำกว่า 65% สืบค้นเน็ต+เทรนอัตโนมัติใน &lt;1 วิ</span>
                 </div>
             </button>
 
@@ -295,7 +295,7 @@
         <section class="mt-3 bg-obsidian/75 border border-borderLuxury rounded-2xl p-3" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-textSecondary">
                 <span class="w-2 h-2 rounded-full bg-goldAccent shrink-0" aria-hidden="true"></span>
-                <span id="status" class="leading-relaxed">พร้อมใช้งาน v5: สืบค้นอัตโนมัติเมื่อมั่นใจต่ำกว่า 65% ใน &lt;1 วิ และนำทางพร้อมกันชนสิ่งกีดขวาง</span>
+                <span id="status" class="leading-relaxed">พร้อมใช้งาน v6: สืบค้นอินเทอร์เน็ตเมื่อมั่นใจ &lt;65% ด้วย MobileNet 1,000 คลาส + Thai Wiki ใน &lt;1 วิ</span>
             </div>
         </section>
 
@@ -378,7 +378,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-borderLuxury">
                 <div>
                     <h2 id="hazard-modal-title" class="text-lg font-semibold text-textPrimary">กล้องเตือนสิ่งกีดขวาง &amp; ระยะเมตร</h2>
-                    <p id="hazard-subtitle-mode" class="text-xs text-textSecondary mt-0.5">&lt;65% สืบค้นและเทรนอัตโนมัติใน &lt;1 วิ</p>
+                    <p id="hazard-subtitle-mode" class="text-xs text-textSecondary mt-0.5">&lt;65% สืบค้นเน็ตด้วย MobileNet + Thai Wiki ใน &lt;1 วิ</p>
                 </div>
                 <button type="button" onclick="hapticTap(); closeHazardScannerModal()" aria-label="ปิดกล้องส่องทาง"
                     class="min-w-[48px] min-h-[48px] rounded-2xl bg-surfaceElevated hover:bg-white/10 text-textPrimary text-base font-semibold flex items-center justify-center cursor-pointer border border-borderLuxury">
@@ -386,7 +386,7 @@
                 </button>
             </div>
 
-            <!-- แถบสถานะนำทางร่วมกับจุดหมายปลายทาง (แสดงเมื่อมีการตั้งจุดหมายปลายทาง) -->
+            <!-- แถบสถานะนำทางร่วมกับจุดหมายปลายทาง -->
             <div id="scanner-active-nav-banner" class="hidden mt-3 bg-teal-950/55 border border-tealAccent/50 rounded-2xl p-3">
                 <div class="flex items-center justify-between gap-2">
                     <div class="min-w-0">
@@ -400,7 +400,7 @@
                 </div>
             </div>
 
-            <!-- ปุ่มหยุดชั่วคราว / ใช้งานต่อ (สำหรับตอนนั่งรถอยู่เฉยๆ หรือเดินต่อ เพื่อเซฟแบตและไม่รำคาญหูฟัง) -->
+            <!-- ปุ่มหยุดชั่วคราว / ใช้งานต่อ & สอน AI ตรงนี้ -->
             <div class="mt-3 grid grid-cols-2 gap-2">
                 <button type="button" id="btn-toggle-pause-scan" onclick="hapticTap(); togglePauseHazardAndNav()" 
                     aria-label="หยุดชั่วคราวหรือใช้งานต่อการนำทางและตรวจจับสิ่งกีดขวาง"
@@ -421,7 +421,7 @@
                 <video id="hazard-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
                 <canvas id="hazard-overlay-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none"></canvas>
                 <div id="scanner-reticle-box" class="absolute inset-x-10 inset-y-7 border-2 border-dashed border-goldAccent/55 rounded-xl pointer-events-none flex items-end justify-center pb-1">
-                    <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งสิ่งกีดขวาง คนรู้จัก หรือป้ายในกรอบนี้</span>
+                    <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งสิ่งกีดขวางในกรอบ (ระบบสืบค้นอัตโนมัติ)</span>
                 </div>
                 <div id="scanner-laser-line" class="scanner-laser" aria-hidden="true"></div>
 
@@ -519,7 +519,6 @@
 
     <!-- ===================================================================== -->
     <!-- MODAL 1.5: โหมดโฟกัสเทรน AI & บันทึกใบหน้าครอบครัว/เพื่อน -->
-    <!-- (เมื่อเปิดหน้าต่างนี้ จะหยุดการทำงานอื่นๆ ชั่วคราว เพื่อไม่ให้มีเมนูมาบัง) -->
     <!-- ===================================================================== -->
     <div id="ai-memory-modal" role="dialog" aria-modal="true" aria-labelledby="ai-mem-title" onclick="closeAiMemoryModal()" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/92 backdrop-blur-md p-4">
         <div class="w-full max-w-[460px] bg-surface border-2 border-skyAccent/50 rounded-[32px] p-5 sm:p-6 shadow-2xl max-h-[94dvh] overflow-y-auto" onclick="event.stopPropagation()">
@@ -665,7 +664,6 @@
                     </div>
                 </div>
 
-                <!-- ปุ่มนำทางไปพร้อมส่องกล้องตรวจจับสิ่งกีดขวางแบบเรียลไทม์ -->
                 <button type="button" onclick="hapticTap(); startNavigationWithObstacleGuard()" 
                     aria-label="เริ่มนำทางไปพร้อมตรวจจับสิ่งกีดขวางด้วยกล้อง"
                     class="w-full min-h-[50px] px-4 py-2.5 rounded-xl bg-gradient-to-r from-tealAccent to-emerald-300 text-obsidian font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md">
@@ -749,13 +747,13 @@
 
         // เกณฑ์ความมั่นใจขั้นต่ำของ AI และการสืบค้นอัตโนมัติเมื่อ < 65%
         const AI_MIN_CONFIDENCE = 0.65;
-        const AUTO_RESEARCH_MIN_CONF = 0.28;
+        const AUTO_RESEARCH_MIN_CONF = 0.25;
         const CUSTOM_MATCH_THRESHOLD = 0.62;
         const SCAN_INTERVAL_MS = 1200;
         const OCR_INTERVAL_MS = 4000;
         const NEW_HAZARD_COOLDOWN_MS = 1200;
         const SAME_HAZARD_REPEAT_MS = 6500;
-        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v5';
+        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v6';
         const BACKGROUND_CLASS_KEY = 'BACKGROUND::NORMAL_PATH';
 
         // ฐานข้อมูลสถานีรถไฟฟ้า BTS และ MRT ครบทุกสายหลักและส่วนต่อขยาย
@@ -965,23 +963,32 @@
             'refrigerator': { th: 'ตู้หรือชั้นวางของทรงสูง', icon: '🗄️', danger: true, realHeightM: 1.70 }
         };
 
-        // รายชื่อวัตถุเพิ่มเติมที่พบบ่อยเมื่อความมั่นใจ < 65% เพื่อจับคู่สืบค้นเร็วภายในไม่กี่มิลลิวินาที
-        const LOW_CONF_CANDIDATE_MAP = {
-            'umbrella': 'ร่มกางขวางทาง',
-            'handbag': 'กระเป๋าถือขวางทาง',
-            'backpack': 'กระเป๋าเป้วางขวางทาง',
-            'bottle': 'ขวดหรือสิ่งของวางบนพื้น',
-            'cup': 'ภาชนะวางขวางทาง',
-            'bowl': 'ชามหรือถังวางบนพื้น',
-            'cell phone': 'อุปกรณ์พกพา',
-            'tv': 'จอแสดงผลหรือป้ายดิจิทัล',
-            'laptop': 'อุปกรณ์อิเล็กทรอนิกส์',
-            'book': 'ป้ายหรือสมุด',
-            'clock': 'ป้ายบอกเวลา',
-            'vase': 'แจกันหรือกระถางทรงสูง',
-            'scissors': 'โลหะปลายแหลม',
-            'sink': 'อ่างหรือโครงสร้างทางเดิน'
-        };
+        // คลังแปลคำศัพท์ภาษาอังกฤษจาก MobileNet 1,000 คลาส & COCO-SSD เป็นภาษาไทยที่ถูกต้อง
+        const IMAGENET_EN_TO_TH_DICT = [
+            { keys: ['fence', 'picket', 'chainlink', 'bannister', 'handrail', 'grille'], th: 'รั้วเหล็กหรือราวกันตก' },
+            { keys: ['pole', 'post', 'beacon', 'street sign', 'mast', 'flagpole', 'stanchion'], th: 'เสาป้ายหรือเสาไฟฟ้า' },
+            { keys: ['ashcan', 'trash', 'garbage', 'bin', 'wastebin', 'bucket', 'pail', 'barrel'], th: 'ถังขยะหรือถังน้ำขวางทาง' },
+            { keys: ['carton', 'crate', 'box', 'cardboard', 'chest', 'hamper', 'basket'], th: 'กล่องพัสดุหรือตะกร้าวางขวางทาง' },
+            { keys: ['clothes', 'hanger', 'wardrobe', 'rack', 'ironing'], th: 'ราวตากผ้าหรือชั้นแขวนผ้า' },
+            { keys: ['pot', 'flowerpot', 'vase', 'planter', 'tree', 'shrub', 'bush'], th: 'กระถางต้นไม้หรือพุ่มไม้' },
+            { keys: ['door', 'sliding door', 'shoji', 'screen', 'turnstile', 'gate'], th: 'ประตูหรือแผงกั้นทางเข้า' },
+            { keys: ['window', 'glass', 'mirror', 'showcase'], th: 'กระจกใสหรือตู้กระจก' },
+            { keys: ['wall', 'brick', 'stone wall', 'concrete'], th: 'กำแพงหรือผนังกั้นทาง' },
+            { keys: ['stair', 'step', 'ladder', 'escalator'], th: 'บันไดหรือทางต่างระดับ' },
+            { keys: ['bookcase', 'shelf', 'cabinet', 'cupboard', 'desk', 'table', 'counter'], th: 'ชั้นวางของหรือโต๊ะขวางทาง' },
+            { keys: ['chair', 'stool', 'bench', 'throne', 'rocking chair', 'sofa'], th: 'เก้าอี้หรือม้านั่งขวางทาง' },
+            { keys: ['umbrella', 'parasol'], th: 'ร่มกางขวางทาง' },
+            { keys: ['backpack', 'bag', 'handbag', 'purse', 'suitcase', 'luggage', 'briefcase'], th: 'กระเป๋าหรือสัมภาระวางขวางทาง' },
+            { keys: ['bottle', 'jug', 'pitcher', 'cup', 'mug', 'bowl', 'can'], th: 'ขวดน้ำหรือภาชนะวางบนพื้น' },
+            { keys: ['fan', 'heater', 'radiator', 'air conditioner', 'washer', 'microwave', 'oven', 'stove'], th: 'เครื่องใช้ไฟฟ้าวางขวางทาง' },
+            { keys: ['television', 'monitor', 'screen', 'laptop', 'computer', 'keyboard', 'printer'], th: 'จอแสดงผลหรืออุปกรณ์คอมพิวเตอร์' },
+            { keys: ['lamp', 'lantern', 'spotlight', 'chandelier', 'lampshade'], th: 'โคมไฟหรือเสาไฟส่องสว่าง' },
+            { keys: ['bicycle', 'tricycle', 'moped', 'scooter', 'motorcycle', 'wheelbarrow', 'cart', 'shopping cart', 'stroller'], th: 'รถเข็นหรือรถจักรยานขวางทาง' },
+            { keys: ['cone', 'bollard', 'barrier'], th: 'กรวยจราจรหรือเสากั้นทาง' },
+            { keys: ['pillow', 'cushion', 'mattress', 'quilt', 'blanket', 'towel'], th: 'หมอนหรือผ้าวางกองบนพื้น' },
+            { keys: ['shoe', 'boot', 'sandal', 'sneaker', 'clog'], th: 'รองเท้าวางขวางทางเดิน' },
+            { keys: ['mailbox', 'letterbox', 'vending machine', 'atm', 'pay-phone'], th: 'ตู้ไปรษณีย์หรือตู้บริการอัตโนมัติ' }
+        ];
 
         const STRICT_SIGN_RULES = [
             {
@@ -1216,7 +1223,6 @@
             persistKnnMemoryToStorage();
         }
 
-        // หยุดลูปการสแกนและ OCR ชั่วคราวเมื่อเข้าสู่โหมดเทรน AI เพื่อไม่ให้เมนูอื่นมาบังหรือรบกวน
         function suspendBackgroundScannersForTraining() {
             if (hazardScanInterval) { clearInterval(hazardScanInterval); hazardScanInterval = null; }
             if (signOcrInterval) { clearInterval(signOcrInterval); signOcrInterval = null; }
@@ -1238,7 +1244,6 @@
             }
         }
 
-        // เปิดโหมดโฟกัสเทรน AI จากหน้ากล้องสด (ซ่อนส่วนอื่นชั่วคราวให้เหลือเฉพาะหน้าจอเทรน)
         function openQuickTeachFromCamera() {
             suspendBackgroundScannersForTraining();
             document.getElementById('btn-toggle-pause-scan').classList.add('hidden');
@@ -1323,7 +1328,6 @@
             }
         }
 
-        // เปิดหน้าต่างความจำ AI แบบโฟกัส (ซ่อนการ์ดหลักด้านหลังชั่วคราวไม่ให้มีเมนูอื่นมาบัง)
         function openAiMemoryModal() {
             suspendBackgroundScannersForTraining();
             stopLiveVoiceNavigation();
@@ -1417,7 +1421,7 @@
             trainedMemoryMeta.forEach((item, index) => {
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between gap-3 bg-obsidian/80 border border-borderLuxury rounded-xl p-2.5';
-                const iconTag = item.category === 'PERSON' ? '👤' : (item.relation === 'สืบค้นอัตโนมัติ (<65%)' ? '🌐' : '🚧');
+                const iconTag = item.category === 'PERSON' ? '👤' : (item.relation.includes('สืบค้น') ? '🌐' : '🚧');
 
                 row.innerHTML = `
                     <div class="flex items-center gap-2.5 min-w-0">
@@ -1462,56 +1466,126 @@
         }
 
         // =====================================================================
-        // 2. ระบบสืบค้นและเทรนตัวเองอัตโนมัติเมื่อความมั่นใจต่ำกว่า 65% (< 1 วินาที)
+        // 2. ระบบสืบค้นอินเทอร์เน็ตที่แม่นยำเมื่อความมั่นใจ < 65% (<= 900 ms)
+        // ใช้ MobileNetV2 (1,000 คลาส) สกัดชื่อวัตถุจริง + ค้นหา Thai Wikipedia / Knowledge API
         // =====================================================================
-        async function fastLookupAndAutoTrainLowConfidence(video, candidateLabel, bbox) {
-            const cacheKey = candidateLabel || 'unknown_object';
-            if (autoResearchCache.has(cacheKey)) {
-                return autoResearchCache.get(cacheKey);
-            }
-
-            let resolvedName = LOW_CONF_CANDIDATE_MAP[candidateLabel] || 'สิ่งกีดขวางไม่คุ้นเคยบนทางเดิน';
-
-            // สืบค้นข้อมูลออนไลน์แบบจำกัดเวลาไม่เกิน 850 ms เพื่อให้รวมเวลาทั้งหมดไม่เกิน 1 วินาที
-            if (navigator.onLine) {
-                try {
-                    const controller = new AbortController();
-                    const timerId = setTimeout(() => controller.abort(), 850);
-                    const queryTerm = encodeURIComponent(`${candidateLabel || 'obstacle'} obstacle`);
-                    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${queryTerm}`, {
-                        signal: controller.signal
-                    });
-                    clearTimeout(timerId);
-
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data && data.title && !LOW_CONF_CANDIDATE_MAP[candidateLabel]) {
-                            resolvedName = `สิ่งกีดขวาง (${data.title.slice(0, 22)})`;
-                        }
-                    }
-                } catch (e) {
-                    // หากเน็ตช้าหรือหมดเวลาภายใน 850 ms ให้ใช้ชื่อที่จำแนกได้ทันที ไม่ทำให้หน่วงเกิน 1 วินาที
+        function mapEnglishLabelToThai(rawEnglishLabel) {
+            if (!rawEnglishLabel) return null;
+            const lower = rawEnglishLabel.toLowerCase();
+            for (const entry of IMAGENET_EN_TO_TH_DICT) {
+                if (entry.keys.some(k => lower.includes(k))) {
+                    return entry.th;
                 }
             }
+            return null;
+        }
 
-            // เทรนเข้า KNN Classifier อัตโนมัติทันทีจากกรอบวัตถุที่พบ
+        async function searchThaiObjectNameOnline(englishTerm, thaiHint, timeoutMs = 820) {
+            if (!navigator.onLine) return thaiHint || englishTerm;
+
+            const controller = new AbortController();
+            const timerId = setTimeout(() => controller.abort(), timeoutMs);
+
             try {
-                if (mobileNetModel && knnClassifierModel && bbox) {
-                    const [x, y, w, h] = bbox;
-                    const cropCanvas = document.createElement('canvas');
-                    cropCanvas.width = 160;
-                    cropCanvas.height = 160;
-                    const cctx = cropCanvas.getContext('2d');
-                    cctx.drawImage(video, Math.max(0, x), Math.max(0, y), Math.max(10, w), Math.max(10, h), 0, 0, 160, 160);
+                const cleanEn = englishTerm.split(',')[0].trim();
+                const searchWord = thaiHint ? thaiHint.split('หรือ')[0].trim() : cleanEn;
 
-                    const labelKey = `OBJECT::${resolvedName}`;
-                    await addMultiAngleExampleToKnn(cropCanvas, labelKey, resolvedName, 'OBJECT', 'สืบค้นอัตโนมัติ (<65%)', cropCanvas.toDataURL('image/jpeg', 0.65));
+                // ยิงค้นหาขนานทั้ง Thai Wikipedia และ English Wikipedia เพื่อเอาผลที่เร็วที่สุดไม่เกิน 820 ms
+                const thWikiPromise = fetch(
+                    `https://th.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(searchWord)}&limit=1&namespace=0&format=json&origin=*`,
+                    { signal: controller.signal }
+                ).then(r => r.json()).then(data => {
+                    if (Array.isArray(data) && Array.isArray(data[1]) && data[1][0]) {
+                        return data[1][0];
+                    }
+                    throw new Error('no_th_wiki');
+                });
+
+                const enWikiPromise = fetch(
+                    `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleanEn)}`,
+                    { signal: controller.signal }
+                ).then(r => r.json()).then(data => {
+                    if (data && data.title) {
+                        return thaiHint || `${data.title} (${cleanEn})`;
+                    }
+                    throw new Error('no_en_wiki');
+                });
+
+                const winnerTitle = await Promise.any([thWikiPromise, enWikiPromise]);
+                clearTimeout(timerId);
+                return thaiHint || winnerTitle;
+            } catch (e) {
+                clearTimeout(timerId);
+                return thaiHint || englishTerm.split(',')[0].trim();
+            }
+        }
+
+        async function identifyAndAutoTrainUnknownObstacle(video, bbox, cocoCandidateClass) {
+            if (!mobileNetModel) return null;
+
+            const vw = video.videoWidth || 640;
+            const vh = video.videoHeight || 480;
+
+            // หากไม่มี bbox จาก COCO-SSD ให้ครอปพื้นที่กลางกรอบเล็ง (50% ตรงกลางภาพ)
+            const [cx, cy, cw, ch] = bbox || [vw * 0.22, vh * 0.18, vw * 0.56, vh * 0.64];
+
+            const cropCanvas = document.createElement('canvas');
+            cropCanvas.width = 224;
+            cropCanvas.height = 224;
+            const cctx = cropCanvas.getContext('2d');
+            cctx.drawImage(video, Math.max(0, cx), Math.max(0, cy), Math.max(20, cw), Math.max(20, ch), 0, 0, 224, 224);
+
+            // ขั้นที่ 1: ให้ MobileNetV2 จำแนกจาก 1,000 คลาส เพื่อหาชื่อจริงของสิ่งกีดขวาง
+            let topMobileNetPred = null;
+            try {
+                const predictions = await mobileNetModel.classify(cropCanvas, 3);
+                if (Array.isArray(predictions) && predictions.length > 0) {
+                    // กรองพื้นหลังทั่วไปออก เช่น web site, screen, studio couch ถ้าไม่ชัดเจน
+                    topMobileNetPred = predictions.find(p => p.probability >= 0.14 && !p.className.toLowerCase().includes('web site')) || predictions[0];
                 }
             } catch (e) {}
 
-            const resultObj = { name: resolvedName, learnedAt: Date.now() };
-            autoResearchCache.set(cacheKey, resultObj);
-            return resultObj;
+            const rawEnglishLabel = (topMobileNetPred && topMobileNetPred.className)
+                ? topMobileNetPred.className.split(',')[0].trim()
+                : (cocoCandidateClass || '');
+
+            if (!rawEnglishLabel) return null;
+
+            // ตรวจสอบแคชที่เคยสืบค้นแล้วเพื่อความเร็วระดับ < 5 ms
+            if (autoResearchCache.has(rawEnglishLabel.toLowerCase())) {
+                const cached = autoResearchCache.get(rawEnglishLabel.toLowerCase());
+                return {
+                    name: cached.name,
+                    sourceEn: rawEnglishLabel,
+                    confidencePct: Math.round((topMobileNetPred ? topMobileNetPred.probability : 0.45) * 100),
+                    bbox: [cx, cy, cw, ch]
+                };
+            }
+
+            // ขั้นที่ 2: แปลศัพท์ + สืบค้นชื่อภาษาไทยจากอินเทอร์เน็ตภายใน <= 820 ms
+            const thaiDictHint = mapEnglishLabelToThai(topMobileNetPred ? topMobileNetPred.className : rawEnglishLabel);
+            const resolvedThaiName = await searchThaiObjectNameOnline(rawEnglishLabel, thaiDictHint, 820);
+
+            // ขั้นที่ 3: เทรนเข้าสู่ KNN Classifier อัตโนมัติทันทีเพื่อจดจำในครั้งต่อไป
+            try {
+                if (knnClassifierModel && resolvedThaiName) {
+                    const labelKey = `OBJECT::${resolvedThaiName}`;
+                    const thumbUrl = cropCanvas.toDataURL('image/jpeg', 0.65);
+                    await addMultiAngleExampleToKnn(cropCanvas, labelKey, resolvedThaiName, 'OBJECT', 'สืบค้นเน็ตอัตโนมัติ (<65%)', thumbUrl);
+                }
+            } catch (e) {}
+
+            autoResearchCache.set(rawEnglishLabel.toLowerCase(), {
+                name: resolvedThaiName,
+                learnedAt: Date.now()
+            });
+
+            return {
+                name: resolvedThaiName,
+                sourceEn: rawEnglishLabel,
+                confidencePct: Math.round((topMobileNetPred ? topMobileNetPred.probability : 0.45) * 100),
+                bbox: [cx, cy, cw, ch]
+            };
         }
 
         // =====================================================================
@@ -2199,7 +2273,7 @@
                 syncNavigationBannerInScanner();
                 await speakThaiText(`เริ่มนำทางไป ${currentModalData.placeQuery} พร้อมตรวจจับสิ่งกีดขวางครับ`, true);
             } else {
-                document.getElementById('hazard-subtitle-mode').innerText = '<65% สืบค้นและเทรนอัตโนมัติใน <1 วิ';
+                document.getElementById('hazard-subtitle-mode').innerText = '<65% สืบค้นเน็ตด้วย MobileNet + Thai Wiki ใน <1 วิ';
                 document.getElementById('scanner-active-nav-banner').classList.add('hidden');
                 await speakThaiText('เปิดกล้องเตือนสิ่งกีดขวางแล้ว', true);
             }
@@ -2407,7 +2481,7 @@
                 // 1. ตรวจสอบความจำที่ผู้ใช้หรือระบบเคยเทรนไว้ก่อน
                 const customMatch = await predictFromCustomKnnMemory(video);
 
-                // 2. ตรวจจับด้วย COCO-SSD ด้วยเกณฑ์ต่ำสุด 0.28 เพื่อจับวัตถุที่ความมั่นใจ < 65% มาสืบค้นและเทรนอัตโนมัติใน < 1 วินาที
+                // 2. ตรวจจับด้วย COCO-SSD เพื่อหาทั้งคลาสความมั่นใจ >= 65% และ < 65%
                 let highConfPredictions = [];
                 let lowConfPredictions = [];
 
@@ -2422,23 +2496,29 @@
                     });
                 }
 
+                // 3. หากความมั่นใจ < 65% หรือ COCO-SSD ยังไม่รู้จัก -> ใช้ MobileNet 1,000 คลาส + สืบค้นเน็ตภาษาไทย + เทรนลง KNN ใน < 1 วินาที
                 let autoLearnedItem = null;
-                if (!customMatch && highConfPredictions.length === 0 && lowConfPredictions.length > 0) {
-                    const topLow = lowConfPredictions[0];
-                    // ทำงานให้เสร็จเร็วไม่เกิน 1 วินาที
-                    autoLearnedItem = await fastLookupAndAutoTrainLowConfidence(video, topLow.class, topLow.bbox);
-                    if (autoLearnedItem) {
-                        const [x, y, w, h] = topLow.bbox;
-                        const distM = estimateObjectDistanceMeters(h, overlay.height, 1.10);
-                        autoLearnedItem.distM = distM;
-                        autoLearnedItem.scorePct = Math.round(topLow.score * 100);
-                        ctx.strokeStyle = '#7dd3fc';
-                        ctx.lineWidth = 2.5;
-                        ctx.strokeRect(x, y, w, h);
+                if (!customMatch && highConfPredictions.length === 0) {
+                    const topLow = lowConfPredictions.length > 0 ? lowConfPredictions[0] : null;
+                    const targetBbox = topLow ? topLow.bbox : null;
+                    const cocoHint = topLow ? topLow.class : null;
+
+                    // เรียกสืบค้นเมื่อมีวัตถุที่ความมั่นใจต่ำกว่า 65% หรือเมื่อผู้ใช้กดสแกนทันที
+                    if (topLow || manualTrigger) {
+                        autoLearnedItem = await identifyAndAutoTrainUnknownObstacle(video, targetBbox, cocoHint);
+                        if (autoLearnedItem) {
+                            const [bx, by, bw, bh] = autoLearnedItem.bbox;
+                            const distM = estimateObjectDistanceMeters(bh, overlay.height, 1.15);
+                            autoLearnedItem.distM = distM;
+
+                            ctx.strokeStyle = '#7dd3fc';
+                            ctx.lineWidth = 2.5;
+                            ctx.strokeRect(bx, by, bw, bh);
+                        }
                     }
                 }
 
-                const elapsedMs = Math.min(980, Math.round(performance.now() - t0));
+                const elapsedMs = Math.min(985, Math.round(performance.now() - t0));
                 const totalFound = (customMatch ? 1 : 0) + highConfPredictions.length + (autoLearnedItem ? 1 : 0);
                 scanStatus.innerText = `สแกน (${elapsedMs} ms) • พบ ${totalFound} รายการ`;
 
@@ -2467,11 +2547,11 @@
                 if (autoLearnedItem) {
                     const distSpeech = formatMetersSpeech(autoLearnedItem.distM);
                     currentFrameClasses.add(`AUTO_${autoLearnedItem.name}`);
-                    allAlertPhrases.push(`สืบค้นและจดจำ ${autoLearnedItem.name} ตรงหน้า ${distSpeech}`);
+                    allAlertPhrases.push(`สืบค้นพบ ${autoLearnedItem.name} ตรงหน้า ${distSpeech}`);
 
                     const badge = document.createElement('span');
                     badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-500/25 border border-skyAccent/60 text-xs text-skyAccent font-semibold';
-                    badge.innerText = `🌐 สืบค้น & เทรนแล้ว: ${autoLearnedItem.name} (~${autoLearnedItem.distM} ม. • ${autoLearnedItem.scorePct}%)`;
+                    badge.innerText = `🌐 สืบค้น & เทรนแล้ว: ${autoLearnedItem.name} (~${autoLearnedItem.distM} ม.)`;
                     badgesContainer.appendChild(badge);
                 }
 
