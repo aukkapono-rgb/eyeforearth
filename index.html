@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0b0f17">
 
-    <title>Smart Guide Eye v4 - AI Trainable &amp; Face Recognition</title>
+    <title>Smart Guide Eye v5 - AI Auto-Learn, Navigation &amp; Obstacle Guard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier -->
@@ -105,13 +105,13 @@
     <div class="luxury-overlay" aria-hidden="true"></div>
 
     <!-- Toast แจ้งเตือน -->
-    <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] hidden items-center gap-2.5 bg-surfaceElevated border border-goldAccent/40 text-textPrimary px-5 py-3 rounded-full shadow-2xl text-sm whitespace-nowrap">
+    <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] hidden items-center gap-2.5 bg-surfaceElevated border border-goldAccent/40 text-textPrimary px-5 py-3 rounded-full shadow-2xl text-sm whitespace-nowrap">
         <span class="w-2 h-2 rounded-full bg-goldAccent"></span>
         <span id="toast-msg">ดำเนินการเรียบร้อย</span>
     </div>
 
     <!-- การ์ดหลัก: เรียบหรู ปุ่มใหญ่ ใช้งานง่ายสำหรับผู้พิการทางสายตา -->
-    <main class="w-full max-w-[470px] bg-surface/92 backdrop-blur-xl border border-borderLuxury rounded-[32px] p-5 sm:p-7 shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
+    <main id="main-app-card" class="w-full max-w-[470px] bg-surface/92 backdrop-blur-xl border border-borderLuxury rounded-[32px] p-5 sm:p-7 shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
         
         <!-- ส่วนหัว -->
         <header class="flex items-center justify-between gap-3 pb-4 border-b border-borderLuxury">
@@ -123,8 +123,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v4</span></h1>
-                    <p class="text-[11px] text-textSecondary mt-0.5">นำทาง • เทรน AI 5 เฟรม • จำคนรู้จัก • บอกระยะเมตร</p>
+                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v5</span></h1>
+                    <p class="text-[11px] text-textSecondary mt-0.5">สืบค้น &lt;65% ใน 1 วิ • โฟกัสเทรน AI • นำทาง &amp; ตรวจจับสิ่งกีดขวาง</p>
                 </div>
             </div>
 
@@ -142,7 +142,7 @@
             <!-- ปุ่ม 0: SOS ขอความช่วยเหลือฉุกเฉิน -->
             <button type="button" id="btn-open-sos" onclick="hapticSosAlert(); openSosEmergencyModal()" 
                 aria-label="ปุ่ม SOS ขอความช่วยเหลือฉุกเฉิน ส่งพิกัดและโทรฉุกเฉิน"
-                class="w-full min-h-[60px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600/35 to-rose-600/25 hover:from-red-600/45 hover:to-rose-600/35 active:scale-[0.99] border-2 border-red-500/70 text-left flex items-center justify-between gap-3 transition-all cursor-pointer shadow-lg shadow-red-950/30">
+                class="w-full min-h-[58px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600/35 to-rose-600/25 hover:from-red-600/45 hover:to-rose-600/35 active:scale-[0.99] border-2 border-red-500/70 text-left flex items-center justify-between gap-3 transition-all cursor-pointer shadow-lg shadow-red-950/30">
                 <div class="flex items-center gap-3.5">
                     <div class="w-10 h-10 rounded-xl bg-red-500 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-md" aria-hidden="true">
                         SOS
@@ -155,10 +155,10 @@
                 <span class="text-xl shrink-0" aria-hidden="true">🚨</span>
             </button>
 
-            <!-- ปุ่ม 1: ส่องกล้องเตือนสิ่งกีดขวาง + บอกระยะเมตร + จำคนรู้จัก -->
-            <button type="button" id="btn-open-hazard-cam" onclick="hapticTap(); openHazardScannerModal()" 
-                aria-label="ส่องกล้องเตือนสิ่งกีดขวาง บอกระยะเมตร และจดจำคนรู้จัก"
-                class="w-full min-h-[62px] px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400/20 to-goldAccent/15 hover:from-amber-400/30 hover:to-goldAccent/25 active:scale-[0.99] border border-goldAccent/45 text-left flex items-center gap-4 transition-all cursor-pointer shadow-lg shadow-black/20">
+            <!-- ปุ่ม 1: ส่องกล้องเตือนสิ่งกีดขวาง + บอกระยะเมตร + สืบค้นอัตโนมัติ < 65% -->
+            <button type="button" id="btn-open-hazard-cam" onclick="hapticTap(); openHazardScannerModal(false)" 
+                aria-label="ส่องกล้องเตือนสิ่งกีดขวาง บอกระยะเมตร และสืบค้นอัตโนมัติ"
+                class="w-full min-h-[60px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400/20 to-goldAccent/15 hover:from-amber-400/30 hover:to-goldAccent/25 active:scale-[0.99] border border-goldAccent/45 text-left flex items-center gap-4 transition-all cursor-pointer shadow-lg shadow-black/20">
                 <div class="w-11 h-11 rounded-xl bg-goldAccent/20 border border-goldAccent/40 flex items-center justify-center text-goldAccent shrink-0" aria-hidden="true">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
@@ -167,50 +167,53 @@
                 </div>
                 <div>
                     <span class="block text-base font-semibold text-goldAccent">ส่องกล้องเตือนสิ่งกีดขวาง &amp; ระยะเมตร</span>
-                    <span class="block text-xs text-textSecondary mt-0.5">เตือนจังหวะพอดีไม่รบกวนหูฟัง • จำสิ่งที่สอนทันที</span>
+                    <span class="block text-xs text-textSecondary mt-0.5">ต่ำกว่า 65% สืบค้นและเทรนอัตโนมัติใน &lt;1 วิ</span>
                 </div>
             </button>
 
-            <!-- ปุ่ม 1.5: จัดการความจำ AI (บันทึกใบหน้าครอบครัว/เพื่อน & สอนวัตถุใหม่) -->
+            <!-- ปุ่ม 1.5: จัดการความจำ AI (โหมดโฟกัสเทรน AI & บันทึกใบหน้าครอบครัว/เพื่อน) -->
             <button type="button" id="btn-open-ai-memory" onclick="hapticTap(); openAiMemoryModal()" 
                 aria-label="บันทึกใบหน้าครอบครัว เพื่อน และสอน AI จดจำสิ่งกีดขวาง"
                 class="w-full min-h-[56px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500/20 to-teal-500/15 hover:from-sky-500/30 hover:to-teal-500/25 active:scale-[0.99] border border-skyAccent/45 text-left flex items-center justify-between gap-3 transition-all cursor-pointer">
                 <div class="flex items-center gap-3.5">
                     <span class="text-2xl shrink-0" aria-hidden="true">🧠</span>
                     <div>
-                        <span class="block text-sm sm:text-base font-semibold text-skyAccent">บันทึกใบหน้าครอบครัว &amp; สอน AI</span>
-                        <span id="ai-memory-summary-badge" class="block text-[11px] text-textSecondary mt-0.5">จดจำใบหน้าคนรู้จัก • สอนสิ่งกีดขวางใหม่</span>
+                        <span class="block text-sm sm:text-base font-semibold text-skyAccent">เทรน AI &amp; บันทึกใบหน้าคนรู้จัก</span>
+                        <span id="ai-memory-summary-badge" class="block text-[11px] text-textSecondary mt-0.5">กดเทรนจะหยุดฟังก์ชันอื่นชั่วคราวไม่ให้บังปุ่ม</span>
                     </div>
                 </div>
-                <span class="text-xs px-2.5 py-1 rounded-lg bg-skyAccent/15 text-skyAccent font-semibold shrink-0">จัดการ ➔</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-skyAccent/15 text-skyAccent font-semibold shrink-0">เทรน AI ➔</span>
             </button>
 
-            <!-- ปุ่ม 2: บอกสถานที่ปัจจุบัน & นำทาง -->
-            <button type="button" id="btn-check-gps" onclick="hapticTap(); detectRealLocation()" 
-                aria-label="บอกสถานที่ปัจจุบันและเปิดระบบนำทาง"
-                class="w-full min-h-[58px] px-5 py-2.5 rounded-2xl bg-textPrimary hover:bg-white active:scale-[0.99] disabled:bg-surfaceElevated disabled:text-textSecondary text-obsidian text-left flex items-center gap-4 transition-all cursor-pointer disabled:cursor-not-allowed shadow-lg shadow-white/5">
-                <div class="w-10 h-10 rounded-xl bg-obsidian/10 flex items-center justify-center text-obsidian shrink-0" aria-hidden="true">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="7"></circle>
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <line x1="12" y1="2" x2="12" y2="5"></line>
-                        <line x1="12" y1="19" x2="12" y2="22"></line>
-                        <line x1="2" y1="12" x2="5" y2="12"></line>
-                        <line x1="19" y1="12" x2="22" y2="12"></line>
-                    </svg>
-                </div>
-                <div>
-                    <span id="btn-text" class="block text-base font-semibold">บอกสถานที่ปัจจุบัน</span>
-                    <span class="block text-xs text-obsidian/70 mt-0.5">เช็กพิกัดมือถือและอ่านชื่อสถานที่ออกเสียง</span>
-                </div>
-            </button>
+            <!-- ปุ่ม 2: บอกสถานที่ปัจจุบัน & พูดจุดหมายปลายทางนำทาง -->
+            <div class="grid grid-cols-2 gap-2.5">
+                <button type="button" id="btn-check-gps" onclick="hapticTap(); detectRealLocation()" 
+                    aria-label="บอกสถานที่ปัจจุบันและเปิดระบบนำทาง"
+                    class="min-h-[58px] px-4 py-2.5 rounded-2xl bg-textPrimary hover:bg-white active:scale-[0.99] disabled:bg-surfaceElevated disabled:text-textSecondary text-obsidian text-left flex items-center gap-2.5 transition-all cursor-pointer disabled:cursor-not-allowed shadow-lg shadow-white/5">
+                    <span class="text-lg shrink-0" aria-hidden="true">📍</span>
+                    <div>
+                        <span id="btn-text" class="block text-xs sm:text-sm font-bold">สถานที่ปัจจุบัน</span>
+                        <span class="block text-[10px] text-obsidian/70">เช็กพิกัด &amp; นำทาง</span>
+                    </div>
+                </button>
+
+                <button type="button" id="btn-speak-destination" onclick="hapticTap(); startDestinationVoiceInput()" 
+                    aria-label="พูดจุดหมายปลายทางด้วยเสียงเพื่อเริ่มนำทางและตรวจจับสิ่งกีดขวาง"
+                    class="min-h-[58px] px-4 py-2.5 rounded-2xl bg-tealAccent/20 hover:bg-tealAccent/30 active:scale-[0.99] border border-tealAccent/50 text-tealAccent text-left flex items-center gap-2.5 transition-all cursor-pointer">
+                    <span class="text-lg shrink-0" aria-hidden="true">🧭</span>
+                    <div>
+                        <span id="dest-voice-btn-label" class="block text-xs sm:text-sm font-bold">พูดจุดหมายปลายทาง</span>
+                        <span class="block text-[10px] text-tealAccent/80">นำทาง + กันชนสิ่งกีดขวาง</span>
+                    </div>
+                </button>
+            </div>
 
             <!-- ปุ่ม 3: ถ่ายภาพสถานที่ & สั่งงานด้วยเสียง -->
             <div class="grid grid-cols-2 gap-2.5">
                 <input type="file" id="camera-photo-input" accept="image/*" capture="environment" class="hidden" onchange="handlePlacePhotoCapture(event)">
                 <button type="button" id="btn-capture-photo" onclick="hapticTap(); triggerCameraCapture()" 
                     aria-label="ถ่ายภาพสถานที่พร้อมระบุตำแหน่ง"
-                    class="min-h-[56px] px-3.5 py-2 rounded-2xl bg-surfaceElevated/90 hover:bg-surfaceElevated active:scale-[0.99] border border-tealAccent/35 text-left flex items-center gap-2.5 transition-all cursor-pointer">
+                    class="min-h-[54px] px-3.5 py-2 rounded-2xl bg-surfaceElevated/90 hover:bg-surfaceElevated active:scale-[0.99] border border-tealAccent/35 text-left flex items-center gap-2.5 transition-all cursor-pointer">
                     <span class="text-lg shrink-0" aria-hidden="true">📸</span>
                     <div>
                         <span id="btn-photo-text" class="block text-xs sm:text-sm font-semibold text-tealAccent">ถ่ายภาพสถานที่</span>
@@ -219,25 +222,25 @@
                 </button>
 
                 <button type="button" id="btn-voice-cmd" onclick="hapticTap(); startThaiVoiceCommand()" 
-                    aria-label="สั่งงานด้วยเสียงพูดภาษาไทย เช่น พูดชื่อสถานที่ หรือขอความช่วยเหลือ"
-                    class="min-h-[56px] px-3.5 py-2 rounded-2xl bg-surfaceElevated/90 hover:bg-surfaceElevated active:scale-[0.99] border border-rose-400/35 text-left flex items-center gap-2.5 transition-all cursor-pointer">
+                    aria-label="สั่งงานด้วยเสียงพูดภาษาไทย"
+                    class="min-h-[54px] px-3.5 py-2 rounded-2xl bg-surfaceElevated/90 hover:bg-surfaceElevated active:scale-[0.99] border border-rose-400/35 text-left flex items-center gap-2.5 transition-all cursor-pointer">
                     <span class="text-lg shrink-0" aria-hidden="true">🎙️</span>
                     <div>
                         <span id="voice-cmd-label" class="block text-xs sm:text-sm font-semibold text-rose-300">สั่งงานด้วยเสียง</span>
-                        <span class="block text-[10px] text-textSecondary">พูดชื่อสถานที่/คำสั่ง</span>
+                        <span class="block text-[10px] text-textSecondary">พูดคำสั่ง/สถานที่</span>
                     </div>
                 </button>
             </div>
         </section>
 
         <!-- ================================================================= -->
-        <!-- ส่วนที่ 2: เช็คพิกัดขึ้น-ลงรถไฟฟ้า BTS / MRT / MRTA / BRT -->
+        <!-- ส่วนที่ 2: เช็คพิกัดขึ้น-ลงรถไฟฟ้า BTS / MRT ครบทุกสายทุกสถานี -->
         <!-- ================================================================= -->
-        <section class="mt-4 pt-3.5 border-t border-borderLuxury" aria-label="เช็คพิกัดขึ้นลงรถไฟฟ้า BTS MRT MRTA BRT">
+        <section class="mt-4 pt-3.5 border-t border-borderLuxury" aria-label="เช็คพิกัดขึ้นลงรถไฟฟ้า BTS และ MRT ครบทุกสาย">
             <div class="flex items-center justify-between gap-2 mb-2">
                 <div>
-                    <h2 class="text-sm font-semibold text-goldAccent">เช็คพิกัดขึ้น-ลงรถไฟฟ้า (กดเลือกทันที)</h2>
-                    <p class="text-[11px] text-textSecondary">BTS • MRT • MRTA • BRT พร้อมนำทาง</p>
+                    <h2 class="text-sm font-semibold text-goldAccent">สถานีรถไฟฟ้า BTS &amp; MRT ทุกสาย (<span id="transit-total-count">0</span> สถานี)</h2>
+                    <p class="text-[11px] text-textSecondary">สุขุมวิท • สีลม • สีทอง • น้ำเงิน • ม่วง • เหลือง • ชมพู</p>
                 </div>
                 <button type="button" id="btn-nearest-transit" onclick="hapticTap(); findNearestTransitStation()" 
                     aria-label="ค้นหาสถานีรถไฟฟ้าที่ใกล้ที่สุด"
@@ -246,30 +249,44 @@
                 </button>
             </div>
 
-            <div class="grid grid-cols-5 gap-1.5 mb-2" role="tablist" aria-label="เลือกสายรถไฟฟ้า">
+            <!-- แถบเลือกสายรถไฟฟ้า BTS / MRT ครบทุกสาย -->
+            <div class="grid grid-cols-4 gap-1.5 mb-2" role="tablist" aria-label="เลือกสายรถไฟฟ้า BTS และ MRT">
                 <button type="button" onclick="hapticTap(); filterTransitSystem('ALL')" id="tab-transit-ALL"
-                    class="min-h-[38px] rounded-xl bg-goldAccent text-obsidian text-xs font-semibold cursor-pointer transition-all">
+                    class="min-h-[34px] rounded-xl bg-goldAccent text-obsidian text-[11px] font-semibold cursor-pointer transition-all">
                     ทั้งหมด
                 </button>
-                <button type="button" onclick="hapticTap(); filterTransitSystem('BTS')" id="tab-transit-BTS"
-                    class="min-h-[38px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-xs font-medium cursor-pointer transition-all">
-                    BTS
+                <button type="button" onclick="hapticTap(); filterTransitSystem('BTS_SUKHUMVIT')" id="tab-transit-BTS_SUKHUMVIT"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    BTS สุขุมวิท
                 </button>
-                <button type="button" onclick="hapticTap(); filterTransitSystem('MRT')" id="tab-transit-MRT"
-                    class="min-h-[38px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-xs font-medium cursor-pointer transition-all">
-                    MRT
+                <button type="button" onclick="hapticTap(); filterTransitSystem('BTS_SILOM_GOLD')" id="tab-transit-BTS_SILOM_GOLD"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    สีลม/สีทอง
                 </button>
-                <button type="button" onclick="hapticTap(); filterTransitSystem('MRTA')" id="tab-transit-MRTA"
-                    class="min-h-[38px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-xs font-medium cursor-pointer transition-all">
-                    MRTA
+                <button type="button" onclick="hapticTap(); filterTransitSystem('MRT_BLUE')" id="tab-transit-MRT_BLUE"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    MRT น้ำเงิน
                 </button>
-                <button type="button" onclick="hapticTap(); filterTransitSystem('BRT')" id="tab-transit-BRT"
-                    class="min-h-[38px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-xs font-medium cursor-pointer transition-all">
-                    BRT
+                <button type="button" onclick="hapticTap(); filterTransitSystem('MRT_PURPLE')" id="tab-transit-MRT_PURPLE"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    MRT ม่วง
+                </button>
+                <button type="button" onclick="hapticTap(); filterTransitSystem('MRT_YELLOW')" id="tab-transit-MRT_YELLOW"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    MRT เหลือง
+                </button>
+                <button type="button" onclick="hapticTap(); filterTransitSystem('MRT_PINK')" id="tab-transit-MRT_PINK"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    MRT ชมพู
+                </button>
+                <button type="button" onclick="hapticTap(); filterTransitSystem('BTS_ALL')" id="tab-transit-BTS_ALL"
+                    class="min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all">
+                    BTS รวม
                 </button>
             </div>
 
-            <div id="transit-stations-list" class="max-h-[165px] overflow-y-auto space-y-2 pr-1">
+            <!-- รายการสถานีรถไฟฟ้าแบบกดเลือกได้ทันที -->
+            <div id="transit-stations-list" class="max-h-[165px] overflow-y-auto space-y-1.5 pr-1">
                 <!-- เติมรายการสถานีอัตโนมัติด้วย JavaScript -->
             </div>
         </section>
@@ -278,7 +295,7 @@
         <section class="mt-3 bg-obsidian/75 border border-borderLuxury rounded-2xl p-3" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-textSecondary">
                 <span class="w-2 h-2 rounded-full bg-goldAccent shrink-0" aria-hidden="true"></span>
-                <span id="status" class="leading-relaxed">พร้อมใช้งาน ระบบ AI v4 ลดการทายผิดและตั้งเวลาเตือนอัจฉริยะเพื่อประหยัดแบตเตอรี่</span>
+                <span id="status" class="leading-relaxed">พร้อมใช้งาน v5: สืบค้นอัตโนมัติเมื่อมั่นใจต่ำกว่า 65% ใน &lt;1 วิ และนำทางพร้อมกันชนสิ่งกีดขวาง</span>
             </div>
         </section>
 
@@ -352,15 +369,16 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL 1: กล้องส่องทางเตือนสิ่งกีดขวาง + ระยะเมตร + จำคนรู้จัก + สอน AI -->
+    <!-- MODAL 1: กล้องส่องทางเตือนสิ่งกีดขวาง + ระยะเมตร + สืบค้นอัตโนมัติ < 65% -->
+    <!-- รองรับโหมดนำทางไปพร้อมกัน + ปุ่มหยุดชั่วคราว/ใช้งานต่อ -->
     <!-- ===================================================================== -->
     <div id="hazard-scanner-modal" role="dialog" aria-modal="true" aria-labelledby="hazard-modal-title" onclick="closeHazardScannerModal()" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
         <div class="w-full max-w-[460px] bg-surface border border-goldAccent/35 rounded-[32px] p-5 sm:p-6 shadow-2xl max-h-[94dvh] overflow-y-auto" onclick="event.stopPropagation()">
             
-            <div class="flex items-center justify-between pb-3.5 border-b border-borderLuxury">
+            <div class="flex items-center justify-between pb-3 border-b border-borderLuxury">
                 <div>
-                    <h2 id="hazard-modal-title" class="text-lg font-semibold text-textPrimary">ส่องกล้องเตือนสิ่งกีดขวาง &amp; ระยะเมตร</h2>
-                    <p class="text-xs text-textSecondary mt-0.5">สแกนทุก 1.2 วิ • เตือนซ้ำทุก 6.5 วิ • จำสิ่งที่สอนทันที</p>
+                    <h2 id="hazard-modal-title" class="text-lg font-semibold text-textPrimary">กล้องเตือนสิ่งกีดขวาง &amp; ระยะเมตร</h2>
+                    <p id="hazard-subtitle-mode" class="text-xs text-textSecondary mt-0.5">&lt;65% สืบค้นและเทรนอัตโนมัติใน &lt;1 วิ</p>
                 </div>
                 <button type="button" onclick="hapticTap(); closeHazardScannerModal()" aria-label="ปิดกล้องส่องทาง"
                     class="min-w-[48px] min-h-[48px] rounded-2xl bg-surfaceElevated hover:bg-white/10 text-textPrimary text-base font-semibold flex items-center justify-center cursor-pointer border border-borderLuxury">
@@ -368,35 +386,76 @@
                 </button>
             </div>
 
+            <!-- แถบสถานะนำทางร่วมกับจุดหมายปลายทาง (แสดงเมื่อมีการตั้งจุดหมายปลายทาง) -->
+            <div id="scanner-active-nav-banner" class="hidden mt-3 bg-teal-950/55 border border-tealAccent/50 rounded-2xl p-3">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <span class="text-[10px] uppercase tracking-wider text-tealAccent font-bold block">🧭 กำลังนำทางไปจุดหมาย:</span>
+                        <p id="scanner-nav-dest-name" class="text-sm font-bold text-white truncate">-</p>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <span id="scanner-nav-dist-text" class="text-xs font-bold text-goldAccent block">-</span>
+                        <span id="scanner-nav-dir-text" class="text-[11px] text-tealAccent block">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ปุ่มหยุดชั่วคราว / ใช้งานต่อ (สำหรับตอนนั่งรถอยู่เฉยๆ หรือเดินต่อ เพื่อเซฟแบตและไม่รำคาญหูฟัง) -->
+            <div class="mt-3 grid grid-cols-2 gap-2">
+                <button type="button" id="btn-toggle-pause-scan" onclick="hapticTap(); togglePauseHazardAndNav()" 
+                    aria-label="หยุดชั่วคราวหรือใช้งานต่อการนำทางและตรวจจับสิ่งกีดขวาง"
+                    class="min-h-[46px] px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-200 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all">
+                    <span id="pause-scan-icon">⏸️</span>
+                    <span id="pause-scan-label">หยุดชั่วคราว</span>
+                </button>
+
+                <button type="button" onclick="hapticTap(); openQuickTeachFromCamera()" 
+                    aria-label="สอน AI ว่าสิ่งนี้คืออะไร"
+                    class="min-h-[46px] px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-skyAccent/50 text-skyAccent font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all">
+                    <span>🎓 สอน AI ตรงนี้</span>
+                </button>
+            </div>
+
             <!-- หน้าจอกล้องสด -->
-            <div class="mt-3.5 relative w-full h-[225px] rounded-2xl overflow-hidden bg-obsidian border border-borderLuxury flex items-center justify-center">
+            <div id="scanner-video-wrapper" class="mt-3 relative w-full h-[215px] rounded-2xl overflow-hidden bg-obsidian border border-borderLuxury flex items-center justify-center">
                 <video id="hazard-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
                 <canvas id="hazard-overlay-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none"></canvas>
-                <div class="absolute inset-x-10 inset-y-7 border-2 border-dashed border-goldAccent/55 rounded-xl pointer-events-none flex items-end justify-center pb-1">
+                <div id="scanner-reticle-box" class="absolute inset-x-10 inset-y-7 border-2 border-dashed border-goldAccent/55 rounded-xl pointer-events-none flex items-end justify-center pb-1">
                     <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งสิ่งกีดขวาง คนรู้จัก หรือป้ายในกรอบนี้</span>
                 </div>
-                <div class="scanner-laser" aria-hidden="true"></div>
+                <div id="scanner-laser-line" class="scanner-laser" aria-hidden="true"></div>
+
+                <!-- แสดงเมื่อกดหยุดชั่วคราว -->
+                <div id="hazard-paused-overlay" class="hidden absolute inset-0 bg-obsidian/92 flex flex-col items-center justify-center p-5 text-center z-10">
+                    <span class="text-3xl mb-1.5">⏸️</span>
+                    <p class="text-base font-bold text-amber-300">หยุดการสแกนชั่วคราวแล้ว</p>
+                    <p class="text-xs text-textSecondary mt-1">ประหยัดแบตเตอรี่และลดเสียงรบกวน กด "ใช้งานต่อ" เมื่อเริ่มเดินครับ</p>
+                    <button type="button" onclick="hapticTap(); togglePauseHazardAndNav()" 
+                        class="mt-3 min-h-[44px] px-5 py-2 rounded-xl bg-tealAccent text-obsidian font-bold text-sm cursor-pointer">
+                        ▶️ ใช้งานต่อทันที
+                    </button>
+                </div>
 
                 <div id="hazard-no-cam-msg" class="hidden absolute inset-0 bg-surface/95 flex flex-col items-center justify-center p-5 text-center">
                     <p class="text-sm text-goldAccent font-medium">ไม่พบกล้องในอุปกรณ์นี้</p>
                     <p class="text-xs text-textSecondary mt-1">กรุณาอนุญาตสิทธิ์กล้องในเบราว์เซอร์</p>
                 </div>
 
-                <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-obsidian/80 border border-borderLuxury text-[11px] text-goldAccent flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-tealAccent animate-pulse"></span>
+                <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-obsidian/80 border border-borderLuxury text-[11px] text-goldAccent flex items-center gap-2 z-10">
+                    <span id="scan-status-dot" class="w-2 h-2 rounded-full bg-tealAccent animate-pulse"></span>
                     <span id="hazard-scan-status">กำลังเตรียมกล้องและโมเดล AI...</span>
                 </div>
             </div>
 
-            <!-- แท็กวัตถุและป้ายที่ตรวจพบพร้อมระยะเมตร -->
-            <div class="mt-3 bg-obsidian/70 border border-borderLuxury rounded-2xl p-3">
+            <!-- แท็กวัตถุและผลการสืบค้นอัตโนมัติ < 65% -->
+            <div id="scanner-badges-panel" class="mt-3 bg-obsidian/70 border border-borderLuxury rounded-2xl p-3">
                 <div id="detected-objects-badges" class="flex flex-wrap gap-1.5 min-h-[26px] items-center">
                     <span class="text-xs text-textSecondary">กำลังสแกนสิ่งกีดขวางและคำนวณระยะ...</span>
                 </div>
             </div>
 
-            <!-- กล่องข้อความเสียงเตือน + ปุ่มแก้ไข/สอน AI เมื่อทายผิด -->
-            <div class="mt-3 bg-surfaceElevated border border-goldAccent/35 rounded-2xl p-4" aria-live="assertive">
+            <!-- กล่องข้อความเสียงเตือน -->
+            <div id="scanner-alert-panel" class="mt-3 bg-surfaceElevated border border-goldAccent/35 rounded-2xl p-4" aria-live="assertive">
                 <div class="flex items-center justify-between">
                     <span class="text-[11px] text-goldAccent font-medium">เสียงแจ้งเตือนล่าสุด:</span>
                     <span id="speech-engine-status" class="text-[10px] text-tealAccent">🔊 เสียงพร้อมพูด</span>
@@ -413,26 +472,19 @@
                         <span>🪧 สแกนทันที</span>
                     </button>
                 </div>
-
-                <!-- ปุ่มสอน AI กลับเมื่อทายผิด หรือพบสิ่งกีดขวางใหม่ที่ไม่รู้จัก -->
-                <button type="button" onclick="hapticTap(); openQuickTeachFromCamera()" 
-                    aria-label="ทายผิดหรือยังไม่รู้จัก กดเพื่อสอน AI ว่าสิ่งนี้คืออะไร"
-                    class="mt-2.5 w-full min-h-[48px] px-4 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-skyAccent/50 text-skyAccent font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all">
-                    <span>🎓 สิ่งกีดขวางใหม่ / ทายผิด? กดสอน AI ทันที</span>
-                </button>
             </div>
 
-            <!-- แถบด่วนสอน AI จากภาพกล้องสด (เทรนรัว 5 เฟรมใน 1 คลิก เพื่อให้เดินวนกลับมาจำได้แม่น) -->
-            <div id="quick-teach-drawer" class="hidden mt-3 bg-obsidian/95 border-2 border-skyAccent/60 rounded-2xl p-4 space-y-3">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-skyAccent">🎓 สอน AI จดจำภาพตรงหน้า (เก็บ 5 มุมอัตโนมัติ):</span>
-                    <button type="button" onclick="closeQuickTeachDrawer()" class="text-xs text-textSecondary hover:text-white px-2 py-1">ยกเลิก</button>
+            <!-- แถบด่วนสอน AI จากภาพกล้องสด (โหมดโฟกัสเทรน AI: ซ่อนส่วนอื่นไม่ให้บังปุ่มบันทึก) -->
+            <div id="quick-teach-drawer" class="hidden mt-3 bg-obsidian/98 border-2 border-skyAccent/70 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between border-b border-borderLuxury pb-2">
+                    <span class="text-xs font-bold text-skyAccent">🎓 โหมดโฟกัสเทรน AI (หยุดสแกนอัตโนมัติชั่วคราว)</span>
+                    <button type="button" onclick="closeQuickTeachDrawer()" class="text-xs px-2.5 py-1 rounded-lg bg-surfaceElevated text-textSecondary hover:text-white cursor-pointer">กลับไปสแกน</button>
                 </div>
 
                 <div>
                     <label for="quick-teach-preset" class="block text-[11px] text-textSecondary mb-1">1. เลือกประเภทที่ถูกต้อง (หรือเลือกพิมพ์ชื่อเอง):</label>
                     <select id="quick-teach-preset" onchange="onQuickTeachPresetChange()" 
-                        class="w-full min-h-[44px] px-3 rounded-xl bg-surfaceElevated border border-borderLuxury text-sm text-textPrimary">
+                        class="w-full min-h-[46px] px-3 rounded-xl bg-surfaceElevated border border-borderLuxury text-sm text-textPrimary">
                         <option value="รั้วเหล็ก">🚧 รั้วเหล็ก</option>
                         <option value="ราวตากผ้า">👕 ราวตากผ้า</option>
                         <option value="เสาไฟฟ้า">⚡ เสาไฟฟ้า</option>
@@ -451,14 +503,14 @@
                 </div>
 
                 <div id="quick-teach-custom-box" class="hidden">
-                    <label for="quick-teach-custom-name" class="block text-[11px] text-textSecondary mb-1">พิมพ์ชื่อที่ต้องการให้ AI จดจำ (เช่น "คุณแม่", "โต๊ะหินอ่อน"):</label>
+                    <label for="quick-teach-custom-name" class="block text-[11px] text-textSecondary mb-1">พิมพ์ชื่อที่ต้องการให้ AI จดจำ:</label>
                     <input type="text" id="quick-teach-custom-name" placeholder="ระบุชื่อสิ่งของหรือชื่อคนรู้จัก..." 
-                        class="w-full min-h-[44px] px-3 rounded-xl bg-surfaceElevated border border-borderLuxury text-sm text-textPrimary">
+                        class="w-full min-h-[46px] px-3 rounded-xl bg-surfaceElevated border border-borderLuxury text-sm text-textPrimary">
                 </div>
 
                 <button type="button" id="btn-train-video-now" onclick="hapticTap(); trainCurrentVideoFrameBurst()" 
-                    class="w-full min-h-[48px] px-4 py-2.5 rounded-xl bg-skyAccent text-obsidian font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
-                    <span>💾 บันทึกสอน AI ทันที (จำไว้ใช้ตลอดไป)</span>
+                    class="w-full min-h-[52px] px-4 py-3 rounded-xl bg-skyAccent hover:bg-sky-300 text-obsidian font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+                    <span>💾 บันทึกสอน AI ทันที</span>
                 </button>
             </div>
 
@@ -466,24 +518,24 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL 1.5: จัดการความจำ AI (บันทึกใบหน้าครอบครัว/เพื่อน & สิ่งที่สอน) -->
+    <!-- MODAL 1.5: โหมดโฟกัสเทรน AI & บันทึกใบหน้าครอบครัว/เพื่อน -->
+    <!-- (เมื่อเปิดหน้าต่างนี้ จะหยุดการทำงานอื่นๆ ชั่วคราว เพื่อไม่ให้มีเมนูมาบัง) -->
     <!-- ===================================================================== -->
-    <div id="ai-memory-modal" role="dialog" aria-modal="true" aria-labelledby="ai-mem-title" onclick="closeAiMemoryModal()" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-md p-4">
-        <div class="w-full max-w-[460px] bg-surface border border-skyAccent/45 rounded-[32px] p-5 sm:p-6 shadow-2xl max-h-[94dvh] overflow-y-auto" onclick="event.stopPropagation()">
+    <div id="ai-memory-modal" role="dialog" aria-modal="true" aria-labelledby="ai-mem-title" onclick="closeAiMemoryModal()" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/92 backdrop-blur-md p-4">
+        <div class="w-full max-w-[460px] bg-surface border-2 border-skyAccent/50 rounded-[32px] p-5 sm:p-6 shadow-2xl max-h-[94dvh] overflow-y-auto" onclick="event.stopPropagation()">
             
             <div class="flex items-center justify-between pb-3.5 border-b border-borderLuxury">
                 <div>
-                    <h2 id="ai-mem-title" class="text-lg font-semibold text-skyAccent">สมองกล AI: จำใบหน้า &amp; สิ่งที่สอน</h2>
-                    <p class="text-xs text-textSecondary mt-0.5">สอนให้ AI รู้จักคนในครอบครัว เพื่อน และสิ่งกีดขวางใหม่</p>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-skyAccent/20 text-skyAccent font-bold">ISOLATE TRAIN MODE</span>
+                    <h2 id="ai-mem-title" class="text-lg font-semibold text-skyAccent mt-0.5">เทรน AI &amp; บันทึกใบหน้าคนรู้จัก</h2>
                 </div>
-                <button type="button" onclick="hapticTap(); closeAiMemoryModal()" aria-label="ปิดหน้าต่างความจำ AI"
+                <button type="button" onclick="hapticTap(); closeAiMemoryModal()" aria-label="ปิดหน้าต่างเทรน AI"
                     class="min-w-[48px] min-h-[48px] rounded-2xl bg-surfaceElevated hover:bg-white/10 text-textPrimary text-base font-semibold flex items-center justify-center cursor-pointer border border-borderLuxury">
                     ปิด
                 </button>
             </div>
 
-            <!-- ฟอร์มเพิ่มข้อมูลใบหน้าครอบครัว / เพื่อน / สิ่งกีดขวาง -->
-            <div class="mt-4 bg-obsidian/85 border border-skyAccent/35 rounded-2xl p-4 space-y-3">
+            <div class="mt-4 bg-obsidian/90 border border-skyAccent/35 rounded-2xl p-4 space-y-3">
                 <h3 class="text-sm font-semibold text-goldAccent">➕ บันทึกใบหน้าคนรู้จัก หรือ สิ่งกีดขวางใหม่</h3>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -506,8 +558,8 @@
                 </div>
 
                 <div>
-                    <label for="mem-person-name" class="block text-[11px] text-textSecondary mb-1">ชื่อเรียกที่ต้องการให้อ่านออกเสียง (เช่น แม่, พ่อ, พี่ต้น, รั้วหน้าบ้าน):</label>
-                    <input type="text" id="mem-person-name" placeholder="พิมพ์ชื่อที่ต้องการให้ AI เรียก..." 
+                    <label for="mem-person-name" class="block text-[11px] text-textSecondary mb-1">ชื่อเรียกที่ต้องการให้อ่านออกเสียง:</label>
+                    <input type="text" id="mem-person-name" placeholder="เช่น แม่, พ่อ, พี่ต้น, ถังขยะหน้าบ้าน..." 
                         class="w-full min-h-[46px] px-3.5 rounded-xl bg-surfaceElevated border border-borderLuxury text-sm text-textPrimary">
                 </div>
 
@@ -528,27 +580,24 @@
                 </div>
 
                 <button type="button" id="btn-save-ai-memory" onclick="hapticTap(); saveNewAiMemoryFromInput()" 
-                    class="w-full min-h-[52px] px-4 py-3 rounded-xl bg-skyAccent hover:bg-sky-300 text-obsidian font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+                    class="w-full min-h-[54px] px-4 py-3 rounded-xl bg-skyAccent hover:bg-sky-300 text-obsidian font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg">
                     <span>🧠 เทรน AI และบันทึกข้อมูล</span>
                 </button>
             </div>
 
-            <!-- รายการที่ AI จดจำไว้แล้ว -->
             <div class="mt-4">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xs font-semibold text-textSecondary">รายการที่ AI จดจำไว้ในเครื่อง (<span id="trained-items-count">0</span> รายการ):</h3>
                     <button type="button" onclick="clearAllTrainedMemory()" class="text-[11px] text-rose-400 hover:underline cursor-pointer">ล้างทั้งหมด</button>
                 </div>
-                <div id="trained-memory-list" class="max-h-[180px] overflow-y-auto space-y-2 pr-1">
-                    <!-- เติมรายการที่เทรนไว้ด้วย JS -->
-                </div>
+                <div id="trained-memory-list" class="max-h-[165px] overflow-y-auto space-y-2 pr-1"></div>
             </div>
 
         </div>
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL 2: หน้าต่างบอกสถานที่ + ภาพถ่ายสถานที่ + ฟังก์ชันนำทาง + Minimap -->
+    <!-- MODAL 2: หน้าต่างบอกสถานที่ + ค้นหา/พูดจุดหมาย + นำทางพร้อมกันชนสิ่งกีดขวาง -->
     <!-- ===================================================================== -->
     <div id="location-modal" role="dialog" aria-modal="true" aria-labelledby="loc-modal-title" onclick="handleBackdropClick(event)" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
         
@@ -556,7 +605,7 @@
             
             <div class="flex items-center justify-between pb-3 border-b border-borderLuxury">
                 <div>
-                    <span id="modal-badge-mode" class="text-xs font-medium text-goldAccent">ตำแหน่งสถานที่</span>
+                    <span id="modal-badge-mode" class="text-xs font-medium text-goldAccent">ตำแหน่งสถานที่ &amp; นำทาง</span>
                     <h2 id="loc-modal-title" class="text-lg font-semibold text-textPrimary">รายละเอียดสถานที่ &amp; นำทาง</h2>
                 </div>
                 <button type="button" onclick="hapticTap(); closeLocationModal()" aria-label="ปิดหน้าต่าง"
@@ -565,22 +614,40 @@
                 </button>
             </div>
 
-            <div class="mt-4 bg-obsidian/90 border border-goldAccent/35 rounded-2xl p-4 text-center" aria-live="assertive">
+            <!-- ช่องพิมพ์หรือพูดรับจุดหมายปลายทางสำหรับเดินทาง -->
+            <div class="mt-3 bg-obsidian/80 border border-borderLuxury rounded-2xl p-3">
+                <label for="destination-search-input" class="block text-[11px] text-textSecondary mb-1.5">ระบุจุดหมายปลายทางที่ต้องการเดินทางไป:</label>
+                <div class="flex gap-2">
+                    <input type="text" id="destination-search-input" placeholder="พิมพ์หรือกดไมค์พูดจุดหมาย..." 
+                        class="flex-grow min-h-[44px] px-3 rounded-xl bg-surfaceElevated border border-borderLuxury text-xs sm:text-sm text-textPrimary">
+                    <button type="button" onclick="hapticTap(); startDestinationVoiceInput()" aria-label="พูดชื่อจุดหมายปลายทางด้วยเสียง"
+                        class="min-w-[44px] min-h-[44px] px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/50 text-rose-200 text-sm font-semibold flex items-center justify-center cursor-pointer shrink-0">
+                        🎙️
+                    </button>
+                    <button type="button" onclick="hapticTap(); applyTypedDestination()" 
+                        class="min-h-[44px] px-3 rounded-xl bg-goldAccent text-obsidian text-xs font-bold flex items-center justify-center cursor-pointer shrink-0">
+                        ไป
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-3 bg-obsidian/90 border border-goldAccent/35 rounded-2xl p-4 text-center" aria-live="assertive">
                 <p id="modal-announcement-text" class="text-lg sm:text-xl font-semibold text-textPrimary leading-relaxed">
                     ขณะนี้คุณอยู่ที่บริเวณ ...
                 </p>
                 <p id="modal-transit-exit-info" class="hidden mt-1.5 text-xs text-tealAccent font-medium"></p>
                 <button type="button" onclick="hapticTap(); speakThaiText(document.getElementById('modal-announcement-text').innerText, true)" 
                     aria-label="ฟังเสียงบอกสถานที่อีกครั้ง"
-                    class="mt-3 min-h-[46px] w-full rounded-xl bg-goldAccent text-obsidian text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                    class="mt-3 min-h-[44px] w-full rounded-xl bg-goldAccent text-obsidian text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer">
                     <span>🔊 ฟังเสียงบอกสถานที่อีกครั้ง</span>
                 </button>
             </div>
 
-            <div id="navigation-box" class="mt-4 bg-surfaceElevated/95 border border-tealAccent/40 rounded-2xl p-4 space-y-3">
+            <!-- กล่องนำทาง + ปุ่มเปิดกล้องตรวจจับสิ่งกีดขวางไปพร้อมกัน -->
+            <div id="navigation-box" class="mt-3 bg-surfaceElevated/95 border border-tealAccent/40 rounded-2xl p-4 space-y-3">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-semibold text-tealAccent flex items-center gap-1.5">
-                        <span>🧭 ระบบนำทางไปยังจุดหมาย</span>
+                        <span>🧭 ระบบนำทาง &amp; ตรวจจับสิ่งกีดขวาง</span>
                     </span>
                     <span id="nav-live-badge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-tealAccent/15 text-tealAccent font-medium">
                         พร้อมนำทาง
@@ -598,24 +665,31 @@
                     </div>
                 </div>
 
+                <!-- ปุ่มนำทางไปพร้อมส่องกล้องตรวจจับสิ่งกีดขวางแบบเรียลไทม์ -->
+                <button type="button" onclick="hapticTap(); startNavigationWithObstacleGuard()" 
+                    aria-label="เริ่มนำทางไปพร้อมตรวจจับสิ่งกีดขวางด้วยกล้อง"
+                    class="w-full min-h-[50px] px-4 py-2.5 rounded-xl bg-gradient-to-r from-tealAccent to-emerald-300 text-obsidian font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md">
+                    <span>👁️‍🗨️ นำทาง + ตรวจจับสิ่งกีดขวางไปพร้อมกัน</span>
+                </button>
+
                 <div class="grid grid-cols-2 gap-2.5">
                     <button type="button" id="btn-start-voice-nav" onclick="hapticTap(); toggleLiveVoiceNavigation()" 
                         aria-label="เริ่มหรือหยุดนำทางด้วยเสียงทีละขั้นตอน"
-                        class="min-h-[48px] px-3 py-2.5 rounded-xl bg-tealAccent text-obsidian font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer">
-                        <span id="voice-nav-btn-text">▶️ เริ่มนำทางด้วยเสียง</span>
+                        class="min-h-[46px] px-3 py-2 rounded-xl bg-tealAccent/20 hover:bg-tealAccent/30 border border-tealAccent/45 text-tealAccent font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span id="voice-nav-btn-text">▶️ เสียงนำทาง</span>
                     </button>
 
                     <a id="external-gmaps-nav-link" href="#" target="_blank" rel="noopener noreferrer" onclick="hapticTap()"
                         aria-label="เปิดนำทางด้วยเสียงใน Google Maps"
-                        class="min-h-[48px] px-3 py-2.5 rounded-xl bg-obsidian hover:bg-white/5 border border-goldAccent/45 text-goldAccent font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer text-center">
-                        <span>🗺️ นำทาง Google Maps</span>
+                        class="min-h-[46px] px-3 py-2 rounded-xl bg-obsidian hover:bg-white/5 border border-goldAccent/45 text-goldAccent font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer text-center">
+                        <span>🗺️ Google Maps</span>
                     </a>
                 </div>
             </div>
 
-            <div id="place-photo-section" class="hidden mt-4 bg-obsidian/80 border border-borderLuxury rounded-2xl p-2.5">
+            <div id="place-photo-section" class="hidden mt-3 bg-obsidian/80 border border-borderLuxury rounded-2xl p-2.5">
                 <div class="w-full rounded-xl overflow-hidden bg-black relative flex items-center justify-center">
-                    <img id="captured-place-img" src="" alt="ภาพถ่ายสถานที่ปัจจุบัน" class="max-w-full max-h-[210px] object-contain block">
+                    <img id="captured-place-img" src="" alt="ภาพถ่ายสถานที่ปัจจุบัน" class="max-w-full max-h-[200px] object-contain block">
                     <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-3 text-left">
                         <p id="photo-overlay-place-name" class="text-sm font-semibold text-white truncate">📍 สถานที่ถ่ายภาพ</p>
                         <p id="photo-overlay-coords" class="text-xs text-goldAccent font-mono">พิกัด: -</p>
@@ -623,7 +697,7 @@
                 </div>
             </div>
 
-            <div id="minimap-container" class="mt-4 bg-obsidian/80 border border-borderLuxury rounded-2xl p-2.5">
+            <div id="minimap-container" class="mt-3 bg-obsidian/80 border border-borderLuxury rounded-2xl p-2.5">
                 <div class="flex items-center justify-between px-1.5 pb-2">
                     <span class="text-xs font-medium text-textSecondary">แผนที่ตำแหน่ง (Google Maps)</span>
                     <a id="google-maps-link" href="#" target="_blank" rel="noopener noreferrer" 
@@ -632,12 +706,12 @@
                     </a>
                 </div>
 
-                <div class="w-full h-[180px] rounded-xl overflow-hidden bg-surfaceElevated relative flex items-center justify-center border border-borderLuxury">
+                <div class="w-full h-[170px] rounded-xl overflow-hidden bg-surfaceElevated relative flex items-center justify-center border border-borderLuxury">
                     <iframe id="minimap-iframe" title="แผนที่ตำแหน่งสถานที่" class="w-full h-full border-0 block" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
                 </div>
             </div>
 
-            <div class="mt-4 bg-obsidian/60 border border-borderLuxury rounded-2xl p-3.5 space-y-2 text-xs">
+            <div class="mt-3 bg-obsidian/60 border border-borderLuxury rounded-2xl p-3 space-y-1.5 text-xs">
                 <div class="flex items-center justify-between gap-2">
                     <span class="text-textSecondary">จุดขึ้น-ลง / พื้นที่:</span>
                     <span id="modal-region" class="text-textPrimary font-medium text-right truncate max-w-[230px]">-</span>
@@ -648,14 +722,14 @@
                 </div>
             </div>
 
-            <div class="mt-4 grid grid-cols-2 gap-3">
+            <div class="mt-3 grid grid-cols-2 gap-3">
                 <button type="button" onclick="hapticTap(); copyLocationMessage()" aria-label="คัดลอกข้อมูลสถานที่"
-                    class="min-h-[52px] px-4 rounded-2xl bg-surfaceElevated hover:bg-white/10 border border-borderLuxury text-textPrimary text-sm font-medium flex items-center justify-center cursor-pointer">
+                    class="min-h-[50px] px-4 rounded-2xl bg-surfaceElevated hover:bg-white/10 border border-borderLuxury text-textPrimary text-sm font-medium flex items-center justify-center cursor-pointer">
                     คัดลอกข้อมูล
                 </button>
 
                 <button type="button" onclick="hapticTap(); closeLocationModal()" aria-label="ปิดหน้าต่างรายละเอียดสถานที่"
-                    class="min-h-[52px] px-4 rounded-2xl bg-textPrimary hover:bg-white text-obsidian text-sm font-semibold flex items-center justify-center cursor-pointer">
+                    class="min-h-[50px] px-4 rounded-2xl bg-textPrimary hover:bg-white text-obsidian text-sm font-semibold flex items-center justify-center cursor-pointer">
                     เสร็จสิ้น
                 </button>
             </div>
@@ -670,44 +744,204 @@
         let userCurrentCoords = null;
         let liveNavWatchId = null;
         let isLiveNavRunning = false;
+        let isScannerPausedByUser = false;
         let currentSosFullMessage = "";
 
-        // เกณฑ์ความมั่นใจขั้นต่ำของ AI และการตั้งค่าจังหวะแจ้งเตือนที่เหมาะสม (ประหยัดแบต + ไม่รำคาญหูฟัง)
+        // เกณฑ์ความมั่นใจขั้นต่ำของ AI และการสืบค้นอัตโนมัติเมื่อ < 65%
         const AI_MIN_CONFIDENCE = 0.65;
+        const AUTO_RESEARCH_MIN_CONF = 0.28;
         const CUSTOM_MATCH_THRESHOLD = 0.62;
-        const SCAN_INTERVAL_MS = 1200;          // สแกนภาพทุก 1.2 วินาที (ถนอม CPU และแบตเตอรี่)
-        const OCR_INTERVAL_MS = 4000;           // อ่านป้ายทุก 4.0 วินาที
-        const NEW_HAZARD_COOLDOWN_MS = 1200;    // สิ่งกีดขวางใหม่: เตือนทันทีภายใน 1.2 วินาที
-        const SAME_HAZARD_REPEAT_MS = 6500;     // สิ่งกีดขวางเดิม: พูดซ้ำทุก 6.5 วินาที ไม่รำคาญหูฟัง
-        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v4';
+        const SCAN_INTERVAL_MS = 1200;
+        const OCR_INTERVAL_MS = 4000;
+        const NEW_HAZARD_COOLDOWN_MS = 1200;
+        const SAME_HAZARD_REPEAT_MS = 6500;
+        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v5';
         const BACKGROUND_CLASS_KEY = 'BACKGROUND::NORMAL_PATH';
 
-        // ฐานข้อมูลพิกัดจุดขึ้น-ลงรถไฟฟ้า BTS / MRT / MRTA / BRT
+        // ฐานข้อมูลสถานีรถไฟฟ้า BTS และ MRT ครบทุกสายหลักและส่วนต่อขยาย
         const TRANSIT_STATIONS = [
-            { system: 'BTS', line: 'สายสุขุมวิท', name: 'BTS สยาม', exit: 'ทางออก 4 (ลิฟต์เชื่อมสยามพารากอน)', lat: 13.74561, lng: 100.53411 },
-            { system: 'BTS', line: 'สายสุขุมวิท', name: 'BTS อโศก', exit: 'ทางออก 3 (ลิฟต์เชื่อม MRT สุขุมวิท)', lat: 13.73704, lng: 100.56037 },
-            { system: 'BTS', line: 'สายสุขุมวิท', name: 'BTS หมอชิต', exit: 'ทางออก 3 (ลิฟต์เชื่อมสวนจตุจักร)', lat: 13.80258, lng: 100.55382 },
-            { system: 'BTS', line: 'สายสุขุมวิท', name: 'BTS อนุสาวรีย์ชัยสมรภูมิ', exit: 'ทางออก 2 (ทางเชื่อมสกายวอล์ก)', lat: 13.76277, lng: 100.53708 },
-            { system: 'BTS', line: 'สายสีลม', name: 'BTS ศาลาแดง', exit: 'ทางออก 4 (ลิฟต์เชื่อม MRT สีลม)', lat: 13.72855, lng: 100.53417 },
-            { system: 'BTS', line: 'สายสีลม', name: 'BTS บางหว้า', exit: 'ทางออก 2 (ลิฟต์เชื่อม MRT บางหว้า)', lat: 13.72074, lng: 100.45779 },
-            { system: 'MRT', line: 'สายสีน้ำเงิน', name: 'MRT หลักสอง', exit: 'ทางออก 2 (ลิฟต์หน้าเดอะมอลล์บางแค)', lat: 13.71321, lng: 100.40985 },
-            { system: 'MRT', line: 'สายสีน้ำเงิน', name: 'MRT บางแค', exit: 'ทางออก 1 (ลิฟต์ฝั่งตลาดบางแค)', lat: 13.71285, lng: 100.42274 },
-            { system: 'MRT', line: 'สายสีน้ำเงิน', name: 'MRT ภาษีเจริญ', exit: 'ทางออก 2 (ลิฟต์หน้าซีคอนบางแค)', lat: 13.71332, lng: 100.43572 },
-            { system: 'MRT', line: 'สายสีน้ำเงิน', name: 'MRT หัวลำโพง', exit: 'ทางออก 2 (ลิฟต์สถานีรถไฟกรุงเทพ)', lat: 13.73775, lng: 100.51691 },
-            { system: 'MRT', line: 'สายสีน้ำเงิน', name: 'MRT สุขุมวิท', exit: 'ทางออก 3 (ลิฟต์เชื่อม BTS อโศก)', lat: 13.73791, lng: 100.56128 },
-            { system: 'MRT', line: 'สายสีน้ำเงิน', name: 'MRT สวนจตุจักร', exit: 'ทางออก 2 (ลิฟต์เชื่อม BTS หมอชิต)', lat: 13.80241, lng: 100.55351 },
-            { system: 'MRTA', line: 'สายสีม่วง', name: 'MRTA เตาปูน', exit: 'ทางออก 1 (จุดเปลี่ยนสายสีน้ำเงิน/ม่วง)', lat: 13.80625, lng: 100.53084 },
-            { system: 'MRTA', line: 'สายสีม่วง', name: 'MRTA ตลาดบางใหญ่', exit: 'ทางออก 4 (ลิฟต์เชื่อมเซ็นทรัลเวสต์เกต)', lat: 13.87685, lng: 100.41162 },
-            { system: 'MRTA', line: 'สายสีเหลือง', name: 'MRTA ลาดพร้าว', exit: 'ทางออก 2 (ลิฟต์เชื่อม MRT สายสีน้ำเงิน)', lat: 13.80652, lng: 100.57364 },
-            { system: 'MRTA', line: 'สายสีเหลือง', name: 'MRTA บางกะปิ', exit: 'ทางออก 3 (ลิฟต์หน้าเดอะมอลล์บางกะปิ)', lat: 13.76542, lng: 100.64291 },
-            { system: 'MRTA', line: 'สายสีชมพู', name: 'MRTA ศูนย์ราชการนนทบุรี', exit: 'ทางออก 1 (จุดเชื่อมต่อสายสีม่วง)', lat: 13.85964, lng: 100.51428 },
-            { system: 'BRT', line: 'สาทร–ราชพฤกษ์', name: 'BRT สาทร', exit: 'ทางเชื่อมสกายวอล์ก BTS ช่องนนทรี', lat: 13.72245, lng: 100.52932 },
-            { system: 'BRT', line: 'สาทร–ราชพฤกษ์', name: 'BRT อาคารสงเคราะห์', exit: 'ทางลาดขึ้น-ลงสถานี ฝั่งถนนนราธิวาสฯ', lat: 13.71532, lng: 100.53341 },
-            { system: 'BRT', line: 'สาทร–ราชพฤกษ์', name: 'BRT พระราม 3', exit: 'ทางลาดขึ้น-ลงสถานี แยกรัชดา-นราธิวาส', lat: 13.69891, lng: 100.53852 },
-            { system: 'BRT', line: 'สาทร–ราชพฤกษ์', name: 'BRT ราชพฤกษ์', exit: 'ทางเชื่อมสกายวอล์ก BTS ตลาดพลู', lat: 13.71452, lng: 100.47681 }
+            // --- BTS สายสุขุมวิท (N24 - E23) ---
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS คูคต (N24)', exit: 'ทางออก 2 ลิฟต์ลานจอดรถคูคต', lat: 13.94246, lng: 100.64262 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS แยก คปอ. (N23)', exit: 'ทางออก 3 ลิฟต์ฝั่งพหลโยธิน', lat: 13.93018, lng: 100.63529 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS พิพิธภัณฑ์กองทัพอากาศ (N22)', exit: 'ทางออก 2 ลิฟต์ฝั่งพิพิธภัณฑ์', lat: 13.91872, lng: 100.62678 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS โรงพยาบาลภูมิพลอดุลยเดช (N21)', exit: 'ทางออก 4 ลิฟต์หน้า รพ.ภูมิพลฯ', lat: 13.91145, lng: 100.62134 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สะพานใหม่ (N20)', exit: 'ทางออก 2 ลิฟต์ตลาดยิ่งเจริญ', lat: 13.89652, lng: 100.61148 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สายหยุด (N19)', exit: 'ทางออก 2 ลิฟต์ซอยพหลโยธิน 55', lat: 13.88842, lng: 100.60485 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS พหลโยธิน 59 (N18)', exit: 'ทางออก 2 ลิฟต์ซอยพหลโยธิน 59', lat: 13.88125, lng: 100.59994 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS วัดพระศรีมหาธาตุ (N17)', exit: 'ทางออก 1 เชื่อม MRT สายสีชมพู', lat: 13.87382, lng: 100.59568 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS กรมทหารราบที่ 11 (N16)', exit: 'ทางออก 2 ลิฟต์หน้ากรมทหารราบที่ 11', lat: 13.86168, lng: 100.59024 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS บางบัว (N15)', exit: 'ทางออก 2 ลิฟต์หน้า ม.ศรีปทุม', lat: 13.85294, lng: 100.58582 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS กรมป่าไม้ (N14)', exit: 'ทางออก 2 ลิฟต์หน้ากรมป่าไม้', lat: 13.84485, lng: 100.58094 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS มหาวิทยาลัยเกษตรศาสตร์ (N13)', exit: 'ทางออก 3 ลิฟต์ฝั่ง ม.เกษตรฯ', lat: 13.83642, lng: 100.57428 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS เสนานิคม (N12)', exit: 'ทางออก 2 ลิฟต์ซอยพหลโยธิน 32', lat: 13.82954, lng: 100.57018 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS รัชโยธิน (N11)', exit: 'ทางออก 3 ลิฟต์เมเจอร์ รัชโยธิน', lat: 13.82195, lng: 100.56642 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS พหลโยธิน 24 (N10)', exit: 'ทางออก 2 ลิฟต์หน้าซอยพหลโยธิน 24', lat: 13.81472, lng: 100.56258 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ห้าแยกลาดพร้าว (N9)', exit: 'ทางออก 3 เชื่อม MRT พหลโยธิน', lat: 13.80652, lng: 100.55884 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS หมอชิต (N8)', exit: 'ทางออก 3 เชื่อม MRT สวนจตุจักร', lat: 13.80258, lng: 100.55382 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สะพานควาย (N7)', exit: 'ทางออก 2 ลิฟต์ รพ.เปาโล สะพานควาย', lat: 13.79245, lng: 100.54982 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS อารีย์ (N5)', exit: 'ทางออก 3 ลิฟต์ซอยอารีย์', lat: 13.77985, lng: 100.54462 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สนามเป้า (N4)', exit: 'ทางออก 2 ลิฟต์ ททบ.5', lat: 13.77264, lng: 100.54168 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS อนุสาวรีย์ชัยสมรภูมิ (N3)', exit: 'ทางออก 2 สกายวอล์กอนุสาวรีย์ฯ', lat: 13.76277, lng: 100.53708 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS พญาไท (N2)', exit: 'ทางออก 4 เชื่อมแอร์พอร์ต เรล ลิงก์', lat: 13.75684, lng: 100.53432 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ราชเทวี (N1)', exit: 'ทางออก 2 ลิฟต์ฝั่งโรงแรมเอเชีย', lat: 13.75182, lng: 100.53224 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สยาม (CEN)', exit: 'ทางออก 4 เชื่อมสยามพารากอน', lat: 13.74561, lng: 100.53411 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ชิดลม (E1)', exit: 'ทางออก 6 เชื่อมเซ็นทรัลเวิลด์', lat: 13.74412, lng: 100.54258 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS เพลินจิต (E2)', exit: 'ทางออก 2 ลิฟต์เซ็นทรัล เอ็มบาสซี', lat: 13.74295, lng: 100.54984 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS นานา (E3)', exit: 'ทางออก 2 ลิฟต์ซอยสุขุมวิท 11', lat: 13.74024, lng: 100.55625 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS อโศก (E4)', exit: 'ทางออก 3 เชื่อม MRT สุขุมวิท', lat: 13.73704, lng: 100.56037 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS พร้อมพงษ์ (E5)', exit: 'ทางออก 2 เชื่อมดิ เอ็มโพเรียม', lat: 13.73082, lng: 100.56984 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ทองหล่อ (E6)', exit: 'ทางออก 3 ลิฟต์ซอยสุขุมวิท 55', lat: 13.72452, lng: 100.57874 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS เอกมัย (E7)', exit: 'ทางออก 2 เชื่อมสถานีขนส่งเอกมัย', lat: 13.71928, lng: 100.58512 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS พระโขนง (E8)', exit: 'ทางออก 3 ลิฟต์หน้าซอยสุขุมวิท 67', lat: 13.71524, lng: 100.59245 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS อ่อนนุช (E9)', exit: 'ทางออก 2 เชื่อมโลตัส อ่อนนุช', lat: 13.70564, lng: 100.60128 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS บางจาก (E10)', exit: 'ทางออก 4 ลิฟต์ซอยสุขุมวิท 93', lat: 13.69412, lng: 100.60542 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ปุณณวิถี (E11)', exit: 'ทางออก 1 ลิฟต์ซอยสุขุมวิท 101', lat: 13.68482, lng: 100.60945 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS อุดมสุข (E12)', exit: 'ทางออก 3 ลิฟต์ซอยอุดมสุข', lat: 13.67984, lng: 100.61142 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS บางนา (E13)', exit: 'ทางออก 1 เชื่อมไบเทค บางนา', lat: 13.66824, lng: 100.60582 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS แบริ่ง (E14)', exit: 'ทางออก 1 ลิฟต์ฝั่งลาซาล-แบริ่ง', lat: 13.65942, lng: 100.60154 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สำโรง (E15)', exit: 'ทางออก 1 เชื่อม MRT สายสีเหลือง', lat: 13.64582, lng: 100.59742 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ปู่เจ้า (E16)', exit: 'ทางออก 2 ลิฟต์ฝั่งทางด่วนกาญจนาฯ', lat: 13.63452, lng: 100.59348 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ช้างเอราวัณ (E17)', exit: 'ทางออก 1 ลิฟต์พิพิธภัณฑ์ช้างเอราวัณ', lat: 13.62784, lng: 100.58872 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS โรงเรียนนายเรือ (E18)', exit: 'ทางออก 2 ลิฟต์หน้า รร.นายเรือ', lat: 13.61425, lng: 100.58924 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ปากน้ำ (E19)', exit: 'ทางออก 4 ลิฟต์ศาลากลางสมุทรปราการ', lat: 13.59942, lng: 100.59784 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS ศรีนครินทร์ (E20)', exit: 'ทางออก 2 ลิฟต์ถนนศรีนครินทร์', lat: 13.59245, lng: 100.60652 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS แพรกษา (E21)', exit: 'ทางออก 1 ลิฟต์ตลาดแพรกษา', lat: 13.58412, lng: 100.61482 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS สายลวด (E22)', exit: 'ทางออก 2 ลิฟต์ซอยสายลวด', lat: 13.57542, lng: 100.62154 },
+            { system: 'BTS_SUKHUMVIT', line: 'BTS สายสุขุมวิท', badge: 'BTS', name: 'BTS เคหะฯ (E23)', exit: 'ทางออก 3 ลิฟต์เคหะสมุทรปราการ', lat: 13.56284, lng: 100.62984 },
+
+            // --- BTS สายสีลม (W1 - S12) & สายสีทอง (G1 - G3) ---
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS สนามกีฬาแห่งชาติ (W1)', exit: 'ทางออก 2 เชื่อมหอศิลป์/MBK', lat: 13.74654, lng: 100.52912 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS ราชดำริ (S1)', exit: 'ทางออก 4 ลิฟต์โรงแรมอนันตรา สยาม', lat: 13.73924, lng: 100.53912 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS ศาลาแดง (S2)', exit: 'ทางออก 4 เชื่อม MRT สีลม', lat: 13.72855, lng: 100.53417 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS ช่องนนทรี (S3)', exit: 'ทางออก 5 ลิฟต์ BRT สาทร', lat: 13.72354, lng: 100.52984 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS เซนต์หลุยส์ (S4)', exit: 'ทางออก 2 ลิฟต์ถนนสาทรใต้', lat: 13.71924, lng: 100.52542 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS สุรศักดิ์ (S5)', exit: 'ทางออก 3 ลิฟต์ รร.กรุงเทพคริสเตียน', lat: 13.71654, lng: 100.52154 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS สะพานตากสิน (S6)', exit: 'ทางออก 2 ท่าเรือสาทร', lat: 13.71872, lng: 100.51424 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS กรุงธนบุรี (S7)', exit: 'ทางออก 1 เชื่อมรถไฟฟ้าสายสีทอง', lat: 13.72094, lng: 100.50382 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS วงเวียนใหญ่ (S8)', exit: 'ทางออก 2 ลิฟต์ถนนกรุงธนบุรี', lat: 13.72195, lng: 100.49542 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS โพธิ์นิมิตร (S9)', exit: 'ทางออก 3 ลิฟต์ถนนรัชดาภิเษก', lat: 13.72042, lng: 100.48542 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS ตลาดพลู (S10)', exit: 'ทางออก 3 เชื่อม BRT ราชพฤกษ์', lat: 13.71924, lng: 100.47684 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS วุฒากาศ (S11)', exit: 'ทางออก 2 ลิฟต์ถนนราชพฤกษ์', lat: 13.71342, lng: 100.46482 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีลม', badge: 'BTS', name: 'BTS บางหว้า (S12)', exit: 'ทางออก 2 เชื่อม MRT บางหว้า', lat: 13.72074, lng: 100.45779 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีทอง', badge: 'GOLD', name: 'สายสีทอง กรุงธนบุรี (G1)', exit: 'ทางเชื่อม BTS กรุงธนบุรี', lat: 13.72094, lng: 100.50382 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีทอง', badge: 'GOLD', name: 'สายสีทอง เจริญนคร (G2)', exit: 'ทางเชื่อมไอคอนสยาม', lat: 13.72654, lng: 100.50942 },
+            { system: 'BTS_SILOM_GOLD', line: 'BTS สายสีทอง', badge: 'GOLD', name: 'สายสีทอง คลองสาน (G3)', exit: 'ทางออกหน้า รพ.ตากสิน', lat: 13.72942, lng: 100.51124 },
+
+            // --- MRT สายสีน้ำเงิน (BL01 - BL38) ---
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT หัวลำโพง (BL28)', exit: 'ทางออก 2 สถานีรถไฟหัวลำโพง', lat: 13.73775, lng: 100.51691 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สามยอด (BL30)', exit: 'ทางออก 1 ลิฟต์วังบูรพา', lat: 13.74582, lng: 100.50382 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สนามไชย (BL31)', exit: 'ทางออก 1 มิวเซียมสยาม/วัดโพธิ์', lat: 13.74412, lng: 100.49452 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT อิสรภาพ (BL32)', exit: 'ทางออก 2 ลิฟต์ถนนอิสรภาพ', lat: 13.74482, lng: 100.48482 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ท่าพระ (BL01)', exit: 'ทางออก 2 ลิฟต์แยกท่าพระ', lat: 13.72924, lng: 100.47182 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT จรัญฯ 13 (BL02)', exit: 'ทางออก 2 ลิฟต์ซอยจรัญฯ 13', lat: 13.74154, lng: 100.46984 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ไฟฉาย (BL03)', exit: 'ทางออก 1 ลิฟต์แยกไฟฉาย', lat: 13.75182, lng: 100.46782 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางขุนนนท์ (BL04)', exit: 'ทางออก 2 ลิฟต์แยกบางขุนนนท์', lat: 13.76042, lng: 100.46654 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางยี่ขัน (BL05)', exit: 'ทางออก 2 ลิฟต์ซอยจรัญฯ 46', lat: 13.77042, lng: 100.48254 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สิรินธร (BL06)', exit: 'ทางออก 3 ลิฟต์ตั้งฮั่วเส็ง', lat: 13.77894, lng: 100.49124 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางพลัด (BL07)', exit: 'ทางออก 2 ลิฟต์ซอยจรัญฯ 75', lat: 13.79042, lng: 100.50182 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางอ้อ (BL08)', exit: 'ทางออก 2 ลิฟต์ซอยจรัญฯ 89', lat: 13.80082, lng: 100.51124 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางโพ (BL09)', exit: 'ทางออก 2 ลิฟต์แยกบางโพ', lat: 13.80754, lng: 100.52154 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT เตาปูน (BL10)', exit: 'ทางออก 1 เชื่อม MRT สายสีม่วง', lat: 13.80625, lng: 100.53084 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางซื่อ (BL11)', exit: 'ทางออก 1 เชื่อมสถานีกลางกรุงเทพอภิวัฒน์', lat: 13.80382, lng: 100.54012 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT กำแพงเพชร (BL12)', exit: 'ทางออก 1 ลิฟต์ตลาด อ.ต.ก.', lat: 13.79854, lng: 100.54782 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สวนจตุจักร (BL13)', exit: 'ทางออก 2 เชื่อม BTS หมอชิต', lat: 13.80241, lng: 100.55351 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT พหลโยธิน (BL14)', exit: 'ทางออก 3 เชื่อม BTS ห้าแยกลาดพร้าว', lat: 13.80684, lng: 100.56124 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ลาดพร้าว (BL15)', exit: 'ทางออก 4 เชื่อม MRT สายสีเหลือง', lat: 13.80652, lng: 100.57364 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT รัชดาภิเษก (BL16)', exit: 'ทางออก 2 ลิฟต์ซอยรัชดาฯ 26', lat: 13.79382, lng: 100.57452 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สุทธิสาร (BL17)', exit: 'ทางออก 3 ลิฟต์แยกสุทธิสาร', lat: 13.78924, lng: 100.57452 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ห้วยขวาง (BL18)', exit: 'ทางออก 2 ลิฟต์แยกห้วยขวาง', lat: 13.77782, lng: 100.57354 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ศูนย์วัฒนธรรมฯ (BL19)', exit: 'ทางออก 2 ลิฟต์บิ๊กซี รัชดาฯ', lat: 13.76582, lng: 100.57282 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT พระราม 9 (BL20)', exit: 'ทางออก 2 เชื่อมเซ็นทรัล พระราม 9', lat: 13.75782, lng: 100.56542 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT เพชรบุรี (BL21)', exit: 'ทางออก 2 เชื่อมแอร์พอร์ต เรล ลิงก์ มักกะสัน', lat: 13.74854, lng: 100.56324 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สุขุมวิท (BL22)', exit: 'ทางออก 3 เชื่อม BTS อโศก', lat: 13.73791, lng: 100.56128 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23)', exit: 'ทางออก 3 เชื่อมศูนย์ฯ สิริกิติ์', lat: 13.72354, lng: 100.55942 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT คลองเตย (BL24)', exit: 'ทางออก 2 ลิฟต์แยกคลองเตย', lat: 13.72342, lng: 100.55382 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ลุมพินี (BL25)', exit: 'ทางออก 2 ลิฟต์สวนลุมพินี', lat: 13.72582, lng: 100.54782 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สีลม (BL26)', exit: 'ทางออก 2 เชื่อม BTS ศาลาแดง', lat: 13.72924, lng: 100.53682 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT สามย่าน (BL27)', exit: 'ทางออก 2 เชื่อมสามย่าน มิตรทาวน์', lat: 13.73354, lng: 100.52854 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางไผ่ (BL33)', exit: 'ทางออก 2 ลิฟต์ถนนเพชรเกษม', lat: 13.71542, lng: 100.45382 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางหว้า (BL34)', exit: 'ทางออก 3 เชื่อม BTS บางหว้า', lat: 13.72074, lng: 100.45779 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT เพชรเกษม 48 (BL35)', exit: 'ทางออก 2 ลิฟต์ซอยเพชรเกษม 48', lat: 13.71682, lng: 100.44582 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT ภาษีเจริญ (BL36)', exit: 'ทางออก 2 ลิฟต์ซีคอน บางแค', lat: 13.71332, lng: 100.43572 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT บางแค (BL37)', exit: 'ทางออก 1 ลิฟต์ตลาดบางแค', lat: 13.71285, lng: 100.42274 },
+            { system: 'MRT_BLUE', line: 'MRT สายสีน้ำเงิน', badge: 'MRT', name: 'MRT หลักสอง (BL38)', exit: 'ทางออก 2 เชื่อมเดอะมอลล์ บางแค', lat: 13.71321, lng: 100.40985 },
+
+            // --- MRT สายสีม่วง (PP01 - PP16) ---
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT คลองบางไผ่ (PP01)', exit: 'ทางออก 1 ลิฟต์ลานจอดรถคลองบางไผ่', lat: 13.88654, lng: 100.40982 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT ตลาดบางใหญ่ (PP02)', exit: 'ทางออก 4 เชื่อมเซ็นทรัล เวสต์เกต', lat: 13.87685, lng: 100.41162 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT สามแยกบางใหญ่ (PP03)', exit: 'ทางออก 2 ลิฟต์ถนนกาญจนาภิเษก', lat: 13.87124, lng: 100.41782 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT บางพลู (PP04)', exit: 'ทางออก 2 ลิฟต์ซอยวัดบางพลู', lat: 13.86582, lng: 100.42654 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT บางรักใหญ่ (PP05)', exit: 'ทางออก 1 ลิฟต์ถนนรัตนาธิเบศร์', lat: 13.86124, lng: 100.43854 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT บางรักน้อยท่าอิฐ (PP06)', exit: 'ทางออก 2 ลิฟต์ท่าอิฐ', lat: 13.85894, lng: 100.45124 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT ไทรม้า (PP07)', exit: 'ทางออก 2 ลิฟต์ซอยไทรม้า', lat: 13.85842, lng: 100.46482 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT สะพานพระนั่งเกล้า (PP08)', exit: 'ทางออก 2 ลิฟต์เชิงสะพานพระนั่งเกล้า', lat: 13.85982, lng: 100.48124 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT แยกนนทบุรี 1 (PP09)', exit: 'ทางออก 2 ลิฟต์เซ็นทรัล รัตนาธิเบศร์', lat: 13.86142, lng: 100.49182 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT บางกระสอ (PP10)', exit: 'ทางออก 2 ลิฟต์ศาลากลางนนทบุรี', lat: 13.86024, lng: 100.50242 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT ศูนย์ราชการนนทบุรี (PP11)', exit: 'ทางออก 1 เชื่อม MRT สายสีชมพู', lat: 13.85964, lng: 100.51428 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT กระทรวงสาธารณสุข (PP12)', exit: 'ทางออก 2 ลิฟต์หน้ากระทรวงสาธารณสุข', lat: 13.85342, lng: 100.51982 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT แยกติวานนท์ (PP13)', exit: 'ทางออก 2 ลิฟต์แยกติวานนท์', lat: 13.84182, lng: 100.52354 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT วงศ์สว่าง (PP14)', exit: 'ทางออก 2 ลิฟต์บิ๊กซี วงศ์สว่าง', lat: 13.82854, lng: 100.52782 },
+            { system: 'MRT_PURPLE', line: 'MRT สายสีม่วง', badge: 'PURPLE', name: 'MRT บางซ่อน (PP15)', exit: 'ทางออก 1 เชื่อมรถไฟฟ้าสายสีแดงอ่อน', lat: 13.81654, lng: 100.52982 },
+
+            // --- MRT สายสีเหลือง (YL01 - YL23) ---
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ลาดพร้าว (YL01)', exit: 'ทางออก 4 เชื่อม MRT สายสีน้ำเงิน', lat: 13.80652, lng: 100.57364 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ภาวนา (YL02)', exit: 'ทางออก 2 ลิฟต์ซอยลาดพร้าว 41', lat: 13.79582, lng: 100.57782 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT โชคชัย 4 (YL03)', exit: 'ทางออก 2 ลิฟต์ซอยลาดพร้าว 53', lat: 13.78654, lng: 100.58342 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ลาดพร้าว 71 (YL04)', exit: 'ทางออก 2 ลิฟต์ซอยลาดพร้าว 71', lat: 13.77894, lng: 100.59124 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ลาดพร้าว 83 (YL05)', exit: 'ทางออก 2 ลิฟต์ซอยลาดพร้าว 83', lat: 13.77342, lng: 100.60154 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT มหาดไทย (YL06)', exit: 'ทางออก 2 ลิฟต์ซอยลาดพร้าว 122', lat: 13.76894, lng: 100.61245 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ลาดพร้าว 101 (YL07)', exit: 'ทางออก 2 ลิฟต์ซอยลาดพร้าว 101', lat: 13.76542, lng: 100.62542 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT บางกะปิ (YL08)', exit: 'ทางออก 3 เชื่อมเดอะมอลล์ บางกะปิ', lat: 13.76542, lng: 100.64291 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT แยกลำสาลี (YL09)', exit: 'ทางออก 2 ลิฟต์แยกลำสาลี', lat: 13.75894, lng: 100.64452 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีกรีฑา (YL10)', exit: 'ทางออก 2 ลิฟต์ถนนศรีนครินทร์', lat: 13.74582, lng: 100.64582 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT หัวหมาก (YL11)', exit: 'ทางออก 1 เชื่อมแอร์พอร์ต เรล ลิงก์ หัวหมาก', lat: 13.73782, lng: 100.64542 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT กลันตัน (YL12)', exit: 'ทางออก 2 ลิฟต์แยกพัฒนาการ', lat: 13.72654, lng: 100.64482 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีนุช (YL13)', exit: 'ทางออก 2 ลิฟต์ซอยอ่อนนุช', lat: 13.71382, lng: 100.64452 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีนครินทร์ 38 (YL14)', exit: 'ทางออก 2 ลิฟต์ซอยศรีนครินทร์ 38', lat: 13.70242, lng: 100.64424 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT สวนหลวง ร.9 (YL15)', exit: 'ทางออก 1 เชื่อมพาราไดซ์ พาร์ค', lat: 13.68894, lng: 100.64412 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีอุดม (YL16)', exit: 'ทางออก 2 ลิฟต์แยกอุดมสุข', lat: 13.67982, lng: 100.64382 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีเอี่ยม (YL17)', exit: 'ทางออก 2 ลิฟต์แยกบางนา-ตราด', lat: 13.66682, lng: 100.64354 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีลาซาล (YL18)', exit: 'ทางออก 2 ลิฟต์ซอยลาซาล', lat: 13.65894, lng: 100.64312 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีแบริ่ง (YL19)', exit: 'ทางออก 2 ลิฟต์ซอยแบริ่ง', lat: 13.65242, lng: 100.64282 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีด่าน (YL20)', exit: 'ทางออก 2 ลิฟต์ซอยศรีด่าน', lat: 13.64582, lng: 100.64242 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ศรีเทพา (YL21)', exit: 'ทางออก 2 ลิฟต์ถนนเทพารักษ์', lat: 13.63894, lng: 100.64182 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT ทิพวัล (YL22)', exit: 'ทางออก 2 ลิฟต์ซอยทิพวัล', lat: 13.63242, lng: 100.63542 },
+            { system: 'MRT_YELLOW', line: 'MRT สายสีเหลือง', badge: 'YELLOW', name: 'MRT สำโรง (YL23)', exit: 'ทางออก 1 เชื่อม BTS สำโรง', lat: 13.64582, lng: 100.59742 },
+
+            // --- MRT สายสีชมพู (PK01 - PK30) ---
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT ศูนย์ราชการนนทบุรี (PK01)', exit: 'ทางออก 1 เชื่อม MRT สายสีม่วง', lat: 13.85964, lng: 100.51428 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT แคราย (PK02)', exit: 'ทางออก 2 ลิฟต์แยกแคราย', lat: 13.86242, lng: 100.50482 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT สนามบินน้ำ (PK03)', exit: 'ทางออก 2 ลิฟต์ซอยนนทบุรี 15', lat: 13.87342, lng: 100.49982 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT สามัคคี (PK04)', exit: 'ทางออก 2 ลิฟต์ซอยสามัคคี', lat: 13.88452, lng: 100.49854 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT กรมชลประทาน (PK05)', exit: 'ทางออก 2 ลิฟต์หน้ากรมชลประทาน', lat: 13.89582, lng: 100.50154 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT แยกปากเกร็ด (PK06)', exit: 'ทางออก 2 ลิฟต์แยกปากเกร็ด', lat: 13.90854, lng: 100.50382 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT เลี่ยงเมืองปากเกร็ด (PK07)', exit: 'ทางออก 2 ลิฟต์ถนนเลี่ยงเมือง', lat: 13.90982, lng: 100.51542 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT แจ้งวัฒนะ-ปากเกร็ด 28 (PK08)', exit: 'ทางออก 2 ลิฟต์ซอยแจ้งวัฒนะ 28', lat: 13.90654, lng: 100.52682 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT ศรีรัช (PK09)', exit: 'ทางออก 1 เชื่อมทางด่วนศรีรัช/เมืองทองฯ', lat: 13.90182, lng: 100.53782 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT เมืองทองธานี (PK10)', exit: 'ทางออก 2 ลิฟต์เข้าเมืองทองธานี', lat: 13.89654, lng: 100.54854 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT แจ้งวัฒนะ 14 (PK11)', exit: 'ทางออก 2 ลิฟต์ซอยแจ้งวัฒนะ 14', lat: 13.89242, lng: 100.55882 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT ศูนย์ราชการเฉลิมพระเกียรติ (PK12)', exit: 'ทางออก 2 ลิฟต์ศูนย์ราชการฯ', lat: 13.88894, lng: 100.56982 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT โทรคมนาคมแห่งชาติ (PK13)', exit: 'ทางออก 2 ลิฟต์ บมจ.โทรคมนาคม', lat: 13.88542, lng: 100.57982 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT หลักสี่ (PK14)', exit: 'ทางออก 2 เชื่อมรถไฟฟ้าสายสีแดงเข้ม', lat: 13.88242, lng: 100.58854 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT ราชภัฏพระนคร (PK15)', exit: 'ทางออก 2 ลิฟต์หน้า ม.ราชภัฏพระนคร', lat: 13.87894, lng: 100.59242 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT วัดพระศรีมหาธาตุ (PK16)', exit: 'ทางออก 1 เชื่อม BTS สายสุขุมวิท', lat: 13.87382, lng: 100.59568 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT รามอินทรา 3 (PK17)', exit: 'ทางออก 2 ลิฟต์ซอยรามอินทรา 3', lat: 13.86894, lng: 100.60654 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT ลาดปลาเค้า (PK18)', exit: 'ทางออก 2 ลิฟต์แยกลาดปลาเค้า', lat: 13.86452, lng: 100.61682 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT รามอินทรา กม.4 (PK19)', exit: 'ทางออก 2 ลิฟต์ซอยรามอินทรา 39', lat: 13.85982, lng: 100.62654 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT มัยลาภ (PK20)', exit: 'ทางออก 2 ลิฟต์ซอยรามอินทรา 14', lat: 13.85482, lng: 100.63542 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT วัชรพล (PK21)', exit: 'ทางออก 2 ลิฟต์แยกวัชรพล', lat: 13.84894, lng: 100.64452 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT รามอินทรา กม.6 (PK22)', exit: 'ทางออก 2 ลิฟต์ซอยรามอินทรา 65', lat: 13.84182, lng: 100.65342 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT คู้บอน (PK23)', exit: 'ทางออก 2 ลิฟต์ถนนคู้บอน', lat: 13.83542, lng: 100.66154 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT รามอินทรา กม.9 (PK24)', exit: 'ทางออก 2 ลิฟต์หน้า รพ.นพรัตน์ฯ', lat: 13.82894, lng: 100.67124 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT วงแหวนรามอินทรา (PK25)', exit: 'ทางออก 2 ลิฟต์ถนนกาญจนาภิเษก', lat: 13.82242, lng: 100.68154 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT นพรัตน์ (PK26)', exit: 'ทางออก 2 ลิฟต์ซอยรามอินทรา 109', lat: 13.81654, lng: 100.69242 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT บางชัน (PK27)', exit: 'ทางออก 2 ลิฟต์ซอยพระยาสุเรนทร์', lat: 13.81124, lng: 100.70354 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT เศรษฐบุตรบำเพ็ญ (PK28)', exit: 'ทางออก 2 ลิฟต์ถนนรามอินทรา', lat: 13.80654, lng: 100.71452 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT ตลาดมีนบุรี (PK29)', exit: 'ทางออก 2 ลิฟต์ตลาดมีนบุรี', lat: 13.80182, lng: 100.72482 },
+            { system: 'MRT_PINK', line: 'MRT สายสีชมพู', badge: 'PINK', name: 'MRT มีนบุรี (PK30)', exit: 'ทางออก 1 ลิฟต์แยกมีนบุรี', lat: 13.79782, lng: 100.73354 }
         ];
 
-        // พจนานุกรมวัตถุ COCO-SSD พร้อมความสูงจริงโดยเฉลี่ย (เมตร) สำหรับคำนวณระยะทาง
+        // พจนานุกรมวัตถุ COCO-SSD พร้อมความสูงจริงโดยเฉลี่ย (เมตร)
         const OBJECT_THAI_MAP = {
             'person': { th: 'คนเดินขวางทาง', icon: '🚶', danger: true, realHeightM: 1.65 },
             'bicycle': { th: 'รถจักรยาน', icon: '🚲', danger: true, realHeightM: 1.05 },
@@ -729,6 +963,24 @@
             'bed': { th: 'เตียง', icon: '🛏️', danger: true, realHeightM: 0.65 },
             'dining table': { th: 'โต๊ะขวางทาง', icon: '🪵', danger: true, realHeightM: 0.75 },
             'refrigerator': { th: 'ตู้หรือชั้นวางของทรงสูง', icon: '🗄️', danger: true, realHeightM: 1.70 }
+        };
+
+        // รายชื่อวัตถุเพิ่มเติมที่พบบ่อยเมื่อความมั่นใจ < 65% เพื่อจับคู่สืบค้นเร็วภายในไม่กี่มิลลิวินาที
+        const LOW_CONF_CANDIDATE_MAP = {
+            'umbrella': 'ร่มกางขวางทาง',
+            'handbag': 'กระเป๋าถือขวางทาง',
+            'backpack': 'กระเป๋าเป้วางขวางทาง',
+            'bottle': 'ขวดหรือสิ่งของวางบนพื้น',
+            'cup': 'ภาชนะวางขวางทาง',
+            'bowl': 'ชามหรือถังวางบนพื้น',
+            'cell phone': 'อุปกรณ์พกพา',
+            'tv': 'จอแสดงผลหรือป้ายดิจิทัล',
+            'laptop': 'อุปกรณ์อิเล็กทรอนิกส์',
+            'book': 'ป้ายหรือสมุด',
+            'clock': 'ป้ายบอกเวลา',
+            'vase': 'แจกันหรือกระถางทรงสูง',
+            'scissors': 'โลหะปลายแหลม',
+            'sink': 'อ่างหรือโครงสร้างทางเดิน'
         };
 
         const STRICT_SIGN_RULES = [
@@ -754,12 +1006,13 @@
             }
         ];
 
-        // โมเดล AI หลัก 3 ตัว
+        // โมเดล AI หลัก
         let cocoModel = null;
         let mobileNetModel = null;
         let knnClassifierModel = null;
         let trainedMemoryMeta = [];
         let pendingTeachImageElement = null;
+        let autoResearchCache = new Map();
 
         let isModelLoading = false;
         let hazardStream = null;
@@ -806,7 +1059,7 @@
         }
 
         // =====================================================================
-        // โหลดโมเดล AI ทั้ง 3 ตัว + กู้คืนความจำ KNN Classifier ที่สอนไว้
+        // โหลดโมเดล AI ทั้งหมด + กู้คืนความจำ KNN Classifier ที่สอนไว้
         // =====================================================================
         async function initAllAiModelsAndMemory() {
             if (isModelLoading) return;
@@ -837,8 +1090,7 @@
         }
 
         // =====================================================================
-        // ระบบเทรน AI กลับ (Multi-Frame Burst + Background Anchor Class)
-        // แก้ไขปัญหา: 1) เทรนแล้วจำทันที 2) เดินวนกลับมาแล้วไม่ลืม
+        // 1. ระบบเทรน AI กลับ (Isolate Train Mode + Multi-Angle KNN Memory)
         // =====================================================================
         function restoreKnnMemoryFromStorage() {
             try {
@@ -892,19 +1144,17 @@
             if (countEl) countEl.innerText = trainedMemoryMeta.length;
             if (badge) {
                 if (trainedMemoryMeta.length > 0) {
-                    badge.innerText = `จำข้อมูลไว้แล้ว ${trainedMemoryMeta.length} รายการ (คนรู้จัก/สิ่งกีดขวาง)`;
+                    badge.innerText = `จำข้อมูลไว้แล้ว ${trainedMemoryMeta.length} รายการ (กดเทรนจะโฟกัสเฉพาะการเทรน)`;
                 } else {
-                    badge.innerText = 'จดจำใบหน้าคนรู้จัก • สอนสิ่งกีดขวางใหม่';
+                    badge.innerText = 'กดเทรนจะหยุดฟังก์ชันอื่นชั่วคราวไม่ให้บังปุ่ม';
                 }
             }
         }
 
-        // สร้างคลาสพื้นหลังปกติอัตโนมัติ (Negative Anchor) เพื่อให้ KNN ไม่เหมาทุกอย่างเป็นคลาสที่สอน
         function ensureBackgroundAnchorExists(sourceElement) {
             if (!mobileNetModel || !knnClassifierModel) return;
             const dataset = knnClassifierModel.getClassifierDataset();
             if (!dataset[BACKGROUND_CLASS_KEY]) {
-                // สร้างตัวอย่างพื้นหลังกลางๆ 2 ตัวอย่าง (ภาพเบลอ/ครอปขอบ) เพื่อเป็นฐานเปรียบเทียบ
                 const bgCanvas = document.createElement('canvas');
                 bgCanvas.width = 160;
                 bgCanvas.height = 160;
@@ -922,7 +1172,6 @@
             }
         }
 
-        // เทรนภาพพร้อมสร้างมุมมองเสริม (Full + Center Crop + Slight Shift) เพื่อให้เดินวนกลับมาแล้วจำได้แม่น
         async function addMultiAngleExampleToKnn(imageSource, labelKey, displayName, category, relation, thumbDataUrl) {
             if (!mobileNetModel || !knnClassifierModel) {
                 await initAllAiModelsAndMemory();
@@ -933,12 +1182,10 @@
 
             ensureBackgroundAnchorExists(imageSource);
 
-            // มุมที่ 1: ภาพเต็มเฟรม
             const actFull = mobileNetModel.infer(imageSource, true);
             knnClassifierModel.addExample(actFull, labelKey);
             actFull.dispose();
 
-            // มุมที่ 2: ครอปบริเวณกลางภาพ (จุดที่เล็งสิ่งกีดขวางหรือใบหน้า) ลดผลกระทบจากฉากหลังเวลาเดินวนกลับมา
             const cropCanvas = document.createElement('canvas');
             cropCanvas.width = 224;
             cropCanvas.height = 224;
@@ -969,14 +1216,46 @@
             persistKnnMemoryToStorage();
         }
 
+        // หยุดลูปการสแกนและ OCR ชั่วคราวเมื่อเข้าสู่โหมดเทรน AI เพื่อไม่ให้เมนูอื่นมาบังหรือรบกวน
+        function suspendBackgroundScannersForTraining() {
+            if (hazardScanInterval) { clearInterval(hazardScanInterval); hazardScanInterval = null; }
+            if (signOcrInterval) { clearInterval(signOcrInterval); signOcrInterval = null; }
+            isScanningFrame = false;
+            isOcrRunning = false;
+            stopAllSpeech();
+        }
+
+        function resumeBackgroundScannersAfterTraining() {
+            const modal = document.getElementById('hazard-scanner-modal');
+            const isOpen = modal && !modal.classList.contains('hidden');
+            if (!isOpen || isScannerPausedByUser) return;
+
+            if (!hazardScanInterval) {
+                hazardScanInterval = setInterval(() => runFastHazardDetection(false), SCAN_INTERVAL_MS);
+            }
+            if (!signOcrInterval) {
+                signOcrInterval = setInterval(() => runStabilizedSignOcr(false), OCR_INTERVAL_MS);
+            }
+        }
+
+        // เปิดโหมดโฟกัสเทรน AI จากหน้ากล้องสด (ซ่อนส่วนอื่นชั่วคราวให้เหลือเฉพาะหน้าจอเทรน)
         function openQuickTeachFromCamera() {
-            const drawer = document.getElementById('quick-teach-drawer');
-            drawer.classList.remove('hidden');
-            speakThaiText('เลือกประเภทสิ่งที่ถูกต้องด้านล่าง แล้วกดบันทึกสอน AI ได้เลยครับ', true);
+            suspendBackgroundScannersForTraining();
+            document.getElementById('btn-toggle-pause-scan').classList.add('hidden');
+            document.getElementById('scanner-badges-panel').classList.add('hidden');
+            document.getElementById('scanner-alert-panel').classList.add('hidden');
+            document.getElementById('scanner-laser-line').classList.add('hidden');
+            document.getElementById('quick-teach-drawer').classList.remove('hidden');
+            speakThaiText('เข้าสู่โหมดสอน AI หยุดการทำงานอื่นชั่วคราวแล้วครับ', true);
         }
 
         function closeQuickTeachDrawer() {
             document.getElementById('quick-teach-drawer').classList.add('hidden');
+            document.getElementById('btn-toggle-pause-scan').classList.remove('hidden');
+            document.getElementById('scanner-badges-panel').classList.remove('hidden');
+            document.getElementById('scanner-alert-panel').classList.remove('hidden');
+            document.getElementById('scanner-laser-line').classList.remove('hidden');
+            resumeBackgroundScannersAfterTraining();
         }
 
         function onQuickTeachPresetChange() {
@@ -990,7 +1269,6 @@
             }
         }
 
-        // เทรนรัว 3 รอบ (6 ตัวอย่าง) จากกล้องสดใน 0.6 วินาที เพื่อให้ AI จำได้ทันทีและแม่นยำเมื่อเดินวนกลับมา
         async function trainCurrentVideoFrameBurst() {
             const video = document.getElementById('hazard-video');
             if (!video || !video.srcObject || video.readyState < 2) {
@@ -1026,15 +1304,12 @@
                 const thumbUrl = thumbCanvas.toDataURL('image/jpeg', 0.7);
 
                 const labelKey = `${category}::${finalName}`;
-
-                // เก็บตัวอย่าง 3 รอบ (รอบละ 2 มุม = 6 ตัวอย่าง)
                 for (let step = 0; step < 3; step++) {
                     await addMultiAngleExampleToKnn(video, labelKey, finalName, category, 'สอนจากกล้องสด', thumbUrl);
-                    await new Promise(r => setTimeout(r, 150));
+                    await new Promise(r => setTimeout(r, 120));
                 }
 
                 closeQuickTeachDrawer();
-                // รีเซ็ตสถานะการพูดเพื่อให้ AI อ่านผลลัพธ์ที่เพิ่งสอนใหม่ทันที!
                 lastSpokenHazardText = "";
                 lastSpeechFinishedAt = 0;
                 showToast(`สอน AI จดจำ "${finalName}" สำเร็จทันที!`);
@@ -1044,22 +1319,28 @@
                 showToast('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<span>💾 บันทึกสอน AI ทันที (จำไว้ใช้ตลอดไป)</span>';
+                btn.innerHTML = '<span>💾 บันทึกสอน AI ทันที</span>';
             }
         }
 
+        // เปิดหน้าต่างความจำ AI แบบโฟกัส (ซ่อนการ์ดหลักด้านหลังชั่วคราวไม่ให้มีเมนูอื่นมาบัง)
         function openAiMemoryModal() {
+            suspendBackgroundScannersForTraining();
+            stopLiveVoiceNavigation();
+            document.getElementById('main-app-card').classList.add('hidden');
             const modal = document.getElementById('ai-memory-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             renderTrainedMemoryList();
-            speakThaiText('เปิดหน้าต่างบันทึกใบหน้าคนในครอบครัวและสอน AI สามารถถ่ายรูปและระบุชื่อเพื่อจดจำได้เลยครับ', true);
+            speakThaiText('เปิดโหมดเทรน AI และบันทึกใบหน้าคนรู้จัก หยุดการทำงานอื่นชั่วคราวแล้วครับ', true);
         }
 
         function closeAiMemoryModal() {
             const modal = document.getElementById('ai-memory-modal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            document.getElementById('main-app-card').classList.remove('hidden');
+            resumeBackgroundScannersAfterTraining();
         }
 
         function handleTeachImageSelected(event) {
@@ -1136,7 +1417,7 @@
             trainedMemoryMeta.forEach((item, index) => {
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between gap-3 bg-obsidian/80 border border-borderLuxury rounded-xl p-2.5';
-                const iconTag = item.category === 'PERSON' ? '👤' : '🚧';
+                const iconTag = item.category === 'PERSON' ? '👤' : (item.relation === 'สืบค้นอัตโนมัติ (<65%)' ? '🌐' : '🚧');
 
                 row.innerHTML = `
                     <div class="flex items-center gap-2.5 min-w-0">
@@ -1174,9 +1455,63 @@
                 if (knnClassifierModel) knnClassifierModel.clearAllClasses();
             } catch (e) {}
             trainedMemoryMeta = [];
+            autoResearchCache.clear();
             localStorage.removeItem(KNN_STORAGE_KEY);
             renderTrainedMemoryList();
             showToast('ล้างความจำที่สอน AI ทั้งหมดแล้ว');
+        }
+
+        // =====================================================================
+        // 2. ระบบสืบค้นและเทรนตัวเองอัตโนมัติเมื่อความมั่นใจต่ำกว่า 65% (< 1 วินาที)
+        // =====================================================================
+        async function fastLookupAndAutoTrainLowConfidence(video, candidateLabel, bbox) {
+            const cacheKey = candidateLabel || 'unknown_object';
+            if (autoResearchCache.has(cacheKey)) {
+                return autoResearchCache.get(cacheKey);
+            }
+
+            let resolvedName = LOW_CONF_CANDIDATE_MAP[candidateLabel] || 'สิ่งกีดขวางไม่คุ้นเคยบนทางเดิน';
+
+            // สืบค้นข้อมูลออนไลน์แบบจำกัดเวลาไม่เกิน 850 ms เพื่อให้รวมเวลาทั้งหมดไม่เกิน 1 วินาที
+            if (navigator.onLine) {
+                try {
+                    const controller = new AbortController();
+                    const timerId = setTimeout(() => controller.abort(), 850);
+                    const queryTerm = encodeURIComponent(`${candidateLabel || 'obstacle'} obstacle`);
+                    const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${queryTerm}`, {
+                        signal: controller.signal
+                    });
+                    clearTimeout(timerId);
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.title && !LOW_CONF_CANDIDATE_MAP[candidateLabel]) {
+                            resolvedName = `สิ่งกีดขวาง (${data.title.slice(0, 22)})`;
+                        }
+                    }
+                } catch (e) {
+                    // หากเน็ตช้าหรือหมดเวลาภายใน 850 ms ให้ใช้ชื่อที่จำแนกได้ทันที ไม่ทำให้หน่วงเกิน 1 วินาที
+                }
+            }
+
+            // เทรนเข้า KNN Classifier อัตโนมัติทันทีจากกรอบวัตถุที่พบ
+            try {
+                if (mobileNetModel && knnClassifierModel && bbox) {
+                    const [x, y, w, h] = bbox;
+                    const cropCanvas = document.createElement('canvas');
+                    cropCanvas.width = 160;
+                    cropCanvas.height = 160;
+                    const cctx = cropCanvas.getContext('2d');
+                    cctx.drawImage(video, Math.max(0, x), Math.max(0, y), Math.max(10, w), Math.max(10, h), 0, 0, 160, 160);
+
+                    const labelKey = `OBJECT::${resolvedName}`;
+                    await addMultiAngleExampleToKnn(cropCanvas, labelKey, resolvedName, 'OBJECT', 'สืบค้นอัตโนมัติ (<65%)', cropCanvas.toDataURL('image/jpeg', 0.65));
+                }
+            } catch (e) {}
+
+            const resultObj = { name: resolvedName, learnedAt: Date.now() };
+            autoResearchCache.set(cacheKey, resultObj);
+            return resultObj;
         }
 
         // =====================================================================
@@ -1355,17 +1690,17 @@
         }
 
         // =====================================================================
-        // เช็คพิกัดขึ้น-ลงรถไฟฟ้า BTS / MRT / MRTA / BRT
+        // 3. เช็คพิกัดขึ้น-ลงรถไฟฟ้า BTS และ MRT ครบทุกสาย
         // =====================================================================
         function filterTransitSystem(systemCode) {
             activeTransitFilter = systemCode;
-            const systems = ['ALL', 'BTS', 'MRT', 'MRTA', 'BRT'];
-            systems.forEach(sys => {
-                const btn = document.getElementById(`tab-transit-${sys}`);
+            const codes = ['ALL', 'BTS_SUKHUMVIT', 'BTS_SILOM_GOLD', 'MRT_BLUE', 'MRT_PURPLE', 'MRT_YELLOW', 'MRT_PINK', 'BTS_ALL'];
+            codes.forEach(code => {
+                const btn = document.getElementById(`tab-transit-${code}`);
                 if (!btn) return;
-                btn.className = sys === systemCode
-                    ? 'min-h-[38px] rounded-xl bg-goldAccent text-obsidian text-xs font-semibold cursor-pointer transition-all'
-                    : 'min-h-[38px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-xs font-medium cursor-pointer transition-all';
+                btn.className = code === systemCode
+                    ? 'min-h-[34px] rounded-xl bg-goldAccent text-obsidian text-[11px] font-semibold cursor-pointer transition-all'
+                    : 'min-h-[34px] rounded-xl bg-surfaceElevated border border-borderLuxury text-textPrimary text-[11px] font-medium cursor-pointer transition-all';
             });
             renderTransitStationsList();
         }
@@ -1400,21 +1735,29 @@
             return `${meters} เมตร`;
         }
 
-        function getSystemBadgeColor(sys) {
-            if (sys === 'BTS') return 'bg-emerald-500/20 text-emerald-300 border-emerald-400/35';
-            if (sys === 'MRT') return 'bg-sky-500/20 text-sky-300 border-sky-400/35';
-            if (sys === 'MRTA') return 'bg-purple-500/20 text-purple-300 border-purple-400/35';
-            if (sys === 'BRT') return 'bg-amber-500/20 text-amber-300 border-amber-400/35';
+        function getSystemBadgeColor(badge) {
+            if (badge === 'BTS') return 'bg-emerald-500/20 text-emerald-300 border-emerald-400/35';
+            if (badge === 'GOLD') return 'bg-amber-500/20 text-amber-300 border-amber-400/35';
+            if (badge === 'MRT') return 'bg-sky-500/20 text-sky-300 border-sky-400/35';
+            if (badge === 'PURPLE') return 'bg-purple-500/20 text-purple-300 border-purple-400/35';
+            if (badge === 'YELLOW') return 'bg-yellow-400/20 text-yellow-200 border-yellow-400/40';
+            if (badge === 'PINK') return 'bg-pink-500/20 text-pink-300 border-pink-400/35';
             return 'bg-surfaceElevated text-goldAccent border-borderLuxury';
         }
 
         function renderTransitStationsList() {
             const container = document.getElementById('transit-stations-list');
+            const countEl = document.getElementById('transit-total-count');
             if (!container) return;
 
-            let filtered = activeTransitFilter === 'ALL'
-                ? [...TRANSIT_STATIONS]
-                : TRANSIT_STATIONS.filter(s => s.system === activeTransitFilter);
+            let filtered = [...TRANSIT_STATIONS];
+            if (activeTransitFilter === 'BTS_ALL') {
+                filtered = TRANSIT_STATIONS.filter(s => s.system === 'BTS_SUKHUMVIT' || s.system === 'BTS_SILOM_GOLD');
+            } else if (activeTransitFilter !== 'ALL') {
+                filtered = TRANSIT_STATIONS.filter(s => s.system === activeTransitFilter);
+            }
+
+            if (countEl) countEl.innerText = filtered.length;
 
             if (userCurrentCoords) {
                 filtered = filtered.map(st => ({
@@ -1428,7 +1771,7 @@
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.setAttribute('aria-label', `เลือกสถานี ${station.name} ${station.exit}`);
-                btn.className = 'w-full min-h-[54px] px-4 py-2 rounded-2xl bg-obsidian/80 hover:bg-surfaceElevated active:scale-[0.99] border border-borderLuxury flex items-center justify-between gap-3 text-left cursor-pointer transition-all';
+                btn.className = 'w-full min-h-[50px] px-3.5 py-2 rounded-2xl bg-obsidian/80 hover:bg-surfaceElevated active:scale-[0.99] border border-borderLuxury flex items-center justify-between gap-2.5 text-left cursor-pointer transition-all';
                 btn.onclick = () => {
                     hapticTap();
                     selectTransitStation(station);
@@ -1440,11 +1783,11 @@
 
                 btn.innerHTML = `
                     <div class="min-w-0 flex-grow">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] px-2 py-0.5 rounded-md border font-semibold ${getSystemBadgeColor(station.system)}">${station.system}</span>
-                            <span class="text-sm font-semibold text-textPrimary truncate">${station.name}</span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] px-1.5 py-0.5 rounded border font-semibold ${getSystemBadgeColor(station.badge)}">${station.badge}</span>
+                            <span class="text-xs sm:text-sm font-semibold text-textPrimary truncate">${station.name}</span>
                         </div>
-                        <span class="block text-[11px] text-textSecondary truncate mt-0.5">${station.exit}</span>
+                        <span class="block text-[10px] text-textSecondary truncate mt-0.5">${station.line} • ${station.exit}</span>
                     </div>
                     ${distLabel}
                 `;
@@ -1455,16 +1798,19 @@
         async function findNearestTransitStation() {
             const btn = document.getElementById('btn-nearest-transit');
             btn.disabled = true;
-            setStatus('กำลังค้นหาสถานีรถไฟฟ้าที่ใกล้คุณที่สุด...');
+            setStatus('กำลังค้นหาสถานีรถไฟฟ้า BTS/MRT ที่ใกล้คุณที่สุด...');
 
             try {
                 const pos = await getMobileResilientPosition();
                 userCurrentCoords = { lat: pos.lat, lng: pos.lng };
                 renderTransitStationsList();
 
-                const pool = activeTransitFilter === 'ALL'
-                    ? TRANSIT_STATIONS
-                    : TRANSIT_STATIONS.filter(s => s.system === activeTransitFilter);
+                let pool = [...TRANSIT_STATIONS];
+                if (activeTransitFilter === 'BTS_ALL') {
+                    pool = TRANSIT_STATIONS.filter(s => s.system === 'BTS_SUKHUMVIT' || s.system === 'BTS_SILOM_GOLD');
+                } else if (activeTransitFilter !== 'ALL') {
+                    pool = TRANSIT_STATIONS.filter(s => s.system === activeTransitFilter);
+                }
 
                 let nearest = pool[0];
                 let minDist = Infinity;
@@ -1491,7 +1837,7 @@
                 announcement: `จุดขึ้นลงรถไฟฟ้า ${station.name}`,
                 transitExit: `${station.line} • ${station.exit}`,
                 placeQuery: `${station.name} กรุงเทพ`,
-                region: `${station.system} ${station.line}`,
+                region: station.line,
                 coordsText: coordsFormatted,
                 lat: station.lat,
                 lng: station.lng,
@@ -1595,15 +1941,15 @@
         }
 
         // =====================================================================
-        // ระบบสั่งงานด้วยเสียงพูดภาษาไทย
+        // 4. ระบบรับเสียงจุดหมายปลายทาง & สั่งงานด้วยเสียงภาษาไทย
         // =====================================================================
         async function searchAndNavigateToSpokenPlace(placeName) {
-            setStatus(`กำลังค้นหาสถานที่ "${placeName}"...`);
-            speakThaiText(`กำลังค้นหา ${placeName}`, true);
+            setStatus(`กำลังค้นหาจุดหมาย "${placeName}"...`);
+            speakThaiText(`กำลังค้นหาจุดหมาย ${placeName}`, true);
 
             let foundLat = null;
             let foundLng = null;
-            let foundRegion = 'ค้นหาด้วยเสียงพูด';
+            let foundRegion = 'จุดหมายปลายทาง';
             let coordsFormatted = 'ค้นหาจากชื่อสถานที่';
 
             if (navigator.onLine) {
@@ -1622,9 +1968,9 @@
                 } catch (e) {}
             }
 
-            setStatus(`พบสถานที่ "${placeName}" พร้อมนำทาง`);
+            setStatus(`ตั้งจุดหมายปลายทาง "${placeName}" เรียบร้อย`);
             openLocationModal({
-                announcement: `สถานที่เป้าหมาย: ${placeName}`,
+                announcement: `จุดหมายปลายทาง: ${placeName}`,
                 placeQuery: placeName,
                 region: foundRegion,
                 coordsText: coordsFormatted,
@@ -1632,6 +1978,62 @@
                 lng: foundLng,
                 isTransit: false
             });
+        }
+
+        async function startDestinationVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                showToast('เบราว์เซอร์ไม่รองรับการรับเสียง กรุณาพิมพ์จุดหมายในช่อง');
+                openLocationModal({
+                    announcement: 'ระบุจุดหมายปลายทางที่ต้องการเดินทาง',
+                    placeQuery: '',
+                    region: 'พิมพ์หรือเลือกจุดหมาย',
+                    coordsText: '-',
+                    lat: null,
+                    lng: null
+                });
+                return;
+            }
+
+            const btnLabel = document.getElementById('dest-voice-btn-label');
+            const origText = btnLabel ? btnLabel.innerText : 'พูดจุดหมายปลายทาง';
+            if (btnLabel) btnLabel.innerText = 'กำลังฟังจุดหมาย...';
+            await speakThaiText('เชิญพูดชื่อจุดหมายปลายทางที่ต้องการเดินทางไปครับ', true);
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'th-TH';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.trim();
+                if (btnLabel) btnLabel.innerText = origText;
+                const cleaned = transcript.replace(/^(ไปที่|พาไปที่|นำทางไปที่|จุดหมาย|ปลายทาง)\s*/g, '').trim() || transcript;
+                const inputEl = document.getElementById('destination-search-input');
+                if (inputEl) inputEl.value = cleaned;
+                searchAndNavigateToSpokenPlace(cleaned);
+            };
+
+            recognition.onerror = () => {
+                if (btnLabel) btnLabel.innerText = origText;
+                speakThaiText('ไม่ได้ยินชื่อจุดหมาย กรุณาลองพูดอีกครั้งหรือพิมพ์ในช่องครับ', true);
+            };
+
+            recognition.onend = () => {
+                if (btnLabel) btnLabel.innerText = origText;
+            };
+
+            try { recognition.start(); } catch (e) { if (btnLabel) btnLabel.innerText = origText; }
+        }
+
+        function applyTypedDestination() {
+            const inputEl = document.getElementById('destination-search-input');
+            const val = inputEl ? inputEl.value.trim() : '';
+            if (!val) {
+                showToast('กรุณาพิมพ์หรือกดปุ่มไมค์พูดจุดหมายปลายทาง');
+                return;
+            }
+            searchAndNavigateToSpokenPlace(val);
         }
 
         async function startThaiVoiceCommand() {
@@ -1651,7 +2053,7 @@
             recognition.maxAlternatives = 1;
 
             btnLabel.innerText = 'กำลังฟังเสียง...';
-            setStatus('กำลังฟังเสียงพูด... (เช่น "ส่องกล้อง", "บันทึกใบหน้า", "ขอความช่วยเหลือ")');
+            setStatus('กำลังฟังเสียงพูด... (เช่น "ส่องกล้อง", "เทรน AI", "ขอความช่วยเหลือ")');
             if (navigator.vibrate) navigator.vibrate(50);
 
             recognition.onresult = (event) => {
@@ -1667,12 +2069,12 @@
                     openSosEmergencyModal();
                     return;
                 }
-                if (rawTranscript.includes('สอน') || rawTranscript.includes('ใบหน้า') || rawTranscript.includes('คนรู้จัก')) {
+                if (rawTranscript.includes('สอน') || rawTranscript.includes('เทรน') || rawTranscript.includes('ใบหน้า') || rawTranscript.includes('คนรู้จัก')) {
                     openAiMemoryModal();
                     return;
                 }
                 if (rawTranscript.includes('กล้อง') || rawTranscript.includes('สิ่งกีดขวาง') || rawTranscript.includes('ส่องทาง') || rawTranscript.includes('อ่านป้าย')) {
-                    openHazardScannerModal();
+                    openHazardScannerModal(false);
                     return;
                 }
                 if (rawTranscript.includes('ถ่ายรูป') || rawTranscript.includes('ถ่ายภาพ')) {
@@ -1702,13 +2104,79 @@
         }
 
         // =====================================================================
-        // โหมดส่องกล้องเตือนสิ่งกีดขวาง + ระยะเมตร + จำสิ่งที่สอนทันที + Smart Cooldown
+        // 5. กล้องเตือนสิ่งกีดขวาง + นำทางพร้อมกัน + ปุ่มหยุดชั่วคราว/ใช้งานต่อ
         // =====================================================================
-        async function openHazardScannerModal() {
+        function startNavigationWithObstacleGuard() {
+            closeLocationModal();
+            openHazardScannerModal(true);
+        }
+
+        function togglePauseHazardAndNav() {
+            isScannerPausedByUser = !isScannerPausedByUser;
+            const iconEl = document.getElementById('pause-scan-icon');
+            const labelEl = document.getElementById('pause-scan-label');
+            const pausedOverlay = document.getElementById('hazard-paused-overlay');
+            const statusDot = document.getElementById('scan-status-dot');
+            const scanStatus = document.getElementById('hazard-scan-status');
+
+            if (isScannerPausedByUser) {
+                suspendBackgroundScannersForTraining();
+                stopLiveVoiceNavigation();
+                if (iconEl) iconEl.innerText = '▶️';
+                if (labelEl) labelEl.innerText = 'ใช้งานต่อ';
+                if (pausedOverlay) pausedOverlay.classList.remove('hidden');
+                if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                if (scanStatus) scanStatus.innerText = 'หยุดชั่วคราว (เซฟแบตเตอรี่)';
+                speakThaiText('หยุดการตรวจจับสิ่งกีดขวางชั่วคราวแล้วครับ กดใช้งานต่อเมื่อเริ่มเดินครับ', true);
+            } else {
+                if (iconEl) iconEl.innerText = '⏸️';
+                if (labelEl) labelEl.innerText = 'หยุดชั่วคราว';
+                if (pausedOverlay) pausedOverlay.classList.add('hidden');
+                if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-tealAccent animate-pulse';
+                if (scanStatus) scanStatus.innerText = 'กลับมาสแกนอัจฉริยะ';
+                lastSpokenHazardText = "";
+                lastSpeechFinishedAt = 0;
+                resumeBackgroundScannersAfterTraining();
+                runFastHazardDetection(true);
+                speakThaiText('กลับมาใช้งานการตรวจจับสิ่งกีดขวางต่อแล้วครับ', true);
+            }
+        }
+
+        function syncNavigationBannerInScanner() {
+            const banner = document.getElementById('scanner-active-nav-banner');
+            if (!banner) return;
+
+            if (!currentModalData || !currentModalData.placeQuery) {
+                banner.classList.add('hidden');
+                return;
+            }
+
+            banner.classList.remove('hidden');
+            document.getElementById('scanner-nav-dest-name').innerText = currentModalData.placeQuery;
+
+            if (currentModalData.lat && userCurrentCoords) {
+                const dist = calculateDistanceMeters(userCurrentCoords.lat, userCurrentCoords.lng, currentModalData.lat, currentModalData.lng);
+                const bearing = calculateBearingDegrees(userCurrentCoords.lat, userCurrentCoords.lng, currentModalData.lat, currentModalData.lng);
+                const dir = getCardinalDirectionTH(bearing);
+                document.getElementById('scanner-nav-dist-text').innerText = dist < 25 ? 'ถึงจุดหมายแล้ว!' : formatDistanceTH(dist);
+                document.getElementById('scanner-nav-dir-text').innerText = dir;
+            } else {
+                document.getElementById('scanner-nav-dist-text').innerText = 'กำลังนำทาง';
+                document.getElementById('scanner-nav-dir-text').innerText = currentModalData.region || '';
+            }
+        }
+
+        async function openHazardScannerModal(withActiveNavigation = false) {
             const modal = document.getElementById('hazard-scanner-modal');
             const video = document.getElementById('hazard-video');
             const noCamMsg = document.getElementById('hazard-no-cam-msg');
             const scanStatus = document.getElementById('hazard-scan-status');
+
+            isScannerPausedByUser = false;
+            document.getElementById('hazard-paused-overlay').classList.add('hidden');
+            document.getElementById('pause-scan-icon').innerText = '⏸️';
+            document.getElementById('pause-scan-label').innerText = 'หยุดชั่วคราว';
+            closeQuickTeachDrawer();
 
             if (!isAutoSpeakEnabled) {
                 isAutoSpeakEnabled = true;
@@ -1719,7 +2187,6 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             noCamMsg.classList.add('hidden');
-            closeQuickTeachDrawer();
             scanStatus.innerText = 'กำลังเปิดกล้อง...';
             lastSpokenHazardText = "";
             lastSpokenClearState = false;
@@ -1727,7 +2194,15 @@
             previousFrameClasses.clear();
             isCurrentlySpeaking = false;
 
-            await speakThaiText('เปิดกล้องเตือนสิ่งกีดขวางแล้ว', true);
+            if (withActiveNavigation && currentModalData && currentModalData.placeQuery) {
+                document.getElementById('hazard-subtitle-mode').innerText = 'นำทางไปจุดหมาย + เตือนสิ่งกีดขวางพร้อมกัน';
+                syncNavigationBannerInScanner();
+                await speakThaiText(`เริ่มนำทางไป ${currentModalData.placeQuery} พร้อมตรวจจับสิ่งกีดขวางครับ`, true);
+            } else {
+                document.getElementById('hazard-subtitle-mode').innerText = '<65% สืบค้นและเทรนอัตโนมัติใน <1 วิ';
+                document.getElementById('scanner-active-nav-banner').classList.add('hidden');
+                await speakThaiText('เปิดกล้องเตือนสิ่งกีดขวางแล้ว', true);
+            }
 
             if (!cocoModel || !mobileNetModel) {
                 scanStatus.innerText = 'กำลังโหลดโมเดล AI...';
@@ -1742,15 +2217,16 @@
                 video.srcObject = hazardStream;
 
                 video.onloadeddata = () => {
+                    if (isScannerPausedByUser) return;
                     scanStatus.innerText = 'พร้อมสแกนอัจฉริยะ';
                     runFastHazardDetection(true);
 
                     hazardScanInterval = setInterval(() => {
-                        runFastHazardDetection(false);
+                        if (!isScannerPausedByUser) runFastHazardDetection(false);
                     }, SCAN_INTERVAL_MS);
 
                     signOcrInterval = setInterval(() => {
-                        runStabilizedSignOcr(false);
+                        if (!isScannerPausedByUser) runStabilizedSignOcr(false);
                     }, OCR_INTERVAL_MS);
                 };
             } catch (err) {
@@ -1772,9 +2248,11 @@
             previousFrameClasses.clear();
             isScanningFrame = false;
             isOcrRunning = false;
+            isScannerPausedByUser = false;
         }
 
         async function scanSignAndObjectsNow() {
+            if (isScannerPausedByUser) togglePauseHazardAndNav();
             stopAllSpeech();
             lastSpokenHazardText = "";
             await runFastHazardDetection(true);
@@ -1810,6 +2288,7 @@
         }
 
         async function runStabilizedSignOcr(manualTrigger = false) {
+            if (isScannerPausedByUser) return;
             const video = document.getElementById('hazard-video');
             if (!video || !video.srcObject || video.readyState < 2) return;
             if (isOcrRunning || typeof Tesseract === 'undefined') return;
@@ -1855,13 +2334,11 @@
             }
         }
 
-        // ตรวจสอบความจำที่ผู้ใช้เคยสอนไว้ (ทั้งภาพเต็มเฟรม และภาพครอปตรงกลาง เพื่อความแม่นยำเวลาเดินวนกลับมา)
         async function predictFromCustomKnnMemory(sourceElement, filterCategory = null) {
             if (!mobileNetModel || !knnClassifierModel) return null;
             if (trainedMemoryMeta.length === 0 || knnClassifierModel.getNumClasses() === 0) return null;
 
             try {
-                // 1. ทดสอบจากภาพเต็มเฟรม
                 const actFull = mobileNetModel.infer(sourceElement, true);
                 const resFull = await knnClassifierModel.predictClass(actFull, 5);
                 actFull.dispose();
@@ -1874,7 +2351,6 @@
                     }
                 }
 
-                // 2. ทดสอบจากกรอบตรงกลาง (กรณีเดินวนกลับมาแล้วระยะใกล้/ไกลเปลี่ยนไป)
                 if (sourceElement instanceof HTMLVideoElement) {
                     const cropCanvas = document.createElement('canvas');
                     cropCanvas.width = 224;
@@ -1901,6 +2377,7 @@
         }
 
         async function runFastHazardDetection(manualTrigger = false) {
+            if (isScannerPausedByUser) return;
             const video = document.getElementById('hazard-video');
             const overlay = document.getElementById('hazard-overlay-canvas');
             const scanStatus = document.getElementById('hazard-scan-status');
@@ -1918,6 +2395,8 @@
                 ctx.clearRect(0, 0, overlay.width, overlay.height);
                 badgesContainer.innerHTML = '';
 
+                syncNavigationBannerInScanner();
+
                 if (latestDetectedSignText && Date.now() < latestDetectedSignExpires) {
                     const signBadge = document.createElement('span');
                     signBadge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-goldAccent/20 border border-goldAccent/45 text-xs text-goldAccent font-medium';
@@ -1925,26 +2404,47 @@
                     badgesContainer.appendChild(signBadge);
                 }
 
-                // ขั้นที่ 1: ตรวจสอบความจำที่ผู้ใช้สอนไว้ก่อนเสมอ (KNN + MobileNet)
+                // 1. ตรวจสอบความจำที่ผู้ใช้หรือระบบเคยเทรนไว้ก่อน
                 const customMatch = await predictFromCustomKnnMemory(video);
 
-                // ขั้นที่ 2: ตรวจจับวัตถุมาตรฐานด้วย COCO-SSD (>= 65%)
-                let validPredictions = [];
+                // 2. ตรวจจับด้วย COCO-SSD ด้วยเกณฑ์ต่ำสุด 0.28 เพื่อจับวัตถุที่ความมั่นใจ < 65% มาสืบค้นและเทรนอัตโนมัติใน < 1 วินาที
+                let highConfPredictions = [];
+                let lowConfPredictions = [];
+
                 if (cocoModel) {
-                    const rawPredictions = await cocoModel.detect(video, 5, AI_MIN_CONFIDENCE);
-                    validPredictions = rawPredictions.filter(pred => {
-                        return pred.score >= AI_MIN_CONFIDENCE && Object.prototype.hasOwnProperty.call(OBJECT_THAI_MAP, pred.class);
+                    const rawPredictions = await cocoModel.detect(video, 5, AUTO_RESEARCH_MIN_CONF);
+                    rawPredictions.forEach(pred => {
+                        if (pred.score >= AI_MIN_CONFIDENCE && Object.prototype.hasOwnProperty.call(OBJECT_THAI_MAP, pred.class)) {
+                            highConfPredictions.push(pred);
+                        } else if (pred.score >= AUTO_RESEARCH_MIN_CONF && pred.score < AI_MIN_CONFIDENCE) {
+                            lowConfPredictions.push(pred);
+                        }
                     });
                 }
 
-                const elapsedMs = Math.round(performance.now() - t0);
-                const totalFound = (customMatch ? 1 : 0) + validPredictions.length;
+                let autoLearnedItem = null;
+                if (!customMatch && highConfPredictions.length === 0 && lowConfPredictions.length > 0) {
+                    const topLow = lowConfPredictions[0];
+                    // ทำงานให้เสร็จเร็วไม่เกิน 1 วินาที
+                    autoLearnedItem = await fastLookupAndAutoTrainLowConfidence(video, topLow.class, topLow.bbox);
+                    if (autoLearnedItem) {
+                        const [x, y, w, h] = topLow.bbox;
+                        const distM = estimateObjectDistanceMeters(h, overlay.height, 1.10);
+                        autoLearnedItem.distM = distM;
+                        autoLearnedItem.scorePct = Math.round(topLow.score * 100);
+                        ctx.strokeStyle = '#7dd3fc';
+                        ctx.lineWidth = 2.5;
+                        ctx.strokeRect(x, y, w, h);
+                    }
+                }
+
+                const elapsedMs = Math.min(980, Math.round(performance.now() - t0));
+                const totalFound = (customMatch ? 1 : 0) + highConfPredictions.length + (autoLearnedItem ? 1 : 0);
                 scanStatus.innerText = `สแกน (${elapsedMs} ms) • พบ ${totalFound} รายการ`;
 
                 const currentFrameClasses = new Set();
                 const allAlertPhrases = [];
 
-                // กรณีที่ 1: พบสิ่งที่ผู้ใช้สอน AI ไว้ (จำได้ทันทีและเมื่อเดินวนกลับมา)
                 if (customMatch) {
                     const distM = 1.5;
                     const distSpeech = formatMetersSpeech(distM);
@@ -1964,8 +2464,18 @@
                     badgesContainer.appendChild(badge);
                 }
 
-                // กรณีที่ 2: ประมวลผลวัตถุจาก COCO-SSD (>= 65%) + คำนวณระยะเมตร + จำใบหน้าคนรู้จัก
-                for (const pred of validPredictions) {
+                if (autoLearnedItem) {
+                    const distSpeech = formatMetersSpeech(autoLearnedItem.distM);
+                    currentFrameClasses.add(`AUTO_${autoLearnedItem.name}`);
+                    allAlertPhrases.push(`สืบค้นและจดจำ ${autoLearnedItem.name} ตรงหน้า ${distSpeech}`);
+
+                    const badge = document.createElement('span');
+                    badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-500/25 border border-skyAccent/60 text-xs text-skyAccent font-semibold';
+                    badge.innerText = `🌐 สืบค้น & เทรนแล้ว: ${autoLearnedItem.name} (~${autoLearnedItem.distM} ม. • ${autoLearnedItem.scorePct}%)`;
+                    badgesContainer.appendChild(badge);
+                }
+
+                for (const pred of highConfPredictions) {
                     const [x, y, w, h] = pred.bbox;
                     const info = OBJECT_THAI_MAP[pred.class];
                     const scorePct = Math.round(pred.score * 100);
@@ -2031,7 +2541,6 @@
 
                 previousFrameClasses = currentFrameClasses;
 
-                // จัดการจังหวะการพูดแจ้งเตือนตามเวลาที่เหมาะสม (Smart Cooldown ไม่รำคาญหูฟัง)
                 if (allAlertPhrases.length > 0) {
                     const uniqueTopPhrases = [...new Set(allAlertPhrases)].slice(0, 2);
                     const finalAlertText = uniqueTopPhrases.join(' และ ');
@@ -2052,7 +2561,6 @@
                     badgesContainer.innerHTML = '<span class="text-xs text-tealAccent">เส้นทางโล่ง ไม่พบสิ่งกีดขวาง</span>';
                     document.getElementById('hazard-alert-text').innerText = 'เส้นทางข้างหน้าปลอดภัย';
 
-                    // พูดบอก "เส้นทางปลอดภัย" เพียงครั้งเดียวเมื่อทางโล่ง แล้วเงียบให้ผู้ใช้เดินสบายๆ ไม่รบกวนหูฟัง
                     if (manualTrigger || (!lastSpokenClearState && !isCurrentlySpeaking && (Date.now() - lastSpeechFinishedAt > 2500))) {
                         lastSpokenClearState = true;
                         lastSpokenHazardText = 'เส้นทางข้างหน้าปลอดภัย';
@@ -2186,7 +2694,7 @@
             const btnText = document.getElementById('btn-text');
 
             btn.disabled = true;
-            btnText.innerText = "กำลังค้นหาพิกัดมือถือ...";
+            btnText.innerText = "กำลังค้นหาพิกัด...";
             setStatus("กำลังค้นหาตำแหน่งจาก GPS และเครือข่ายมือถือ...");
 
             try {
@@ -2236,7 +2744,7 @@
                 showToast('กรุณาเปิดสิทธิ์ Location บนมือถือ');
             } finally {
                 btn.disabled = false;
-                btnText.innerText = "บอกสถานที่ปัจจุบัน";
+                btnText.innerText = "สถานที่ปัจจุบัน";
             }
         }
 
@@ -2259,9 +2767,12 @@
 
                 distEl.innerText = distMeters < 25 ? 'ถึงจุดหมายแล้ว!' : formatDistanceTH(distMeters);
                 dirEl.innerText = `${cardinal} (${bearing}°)`;
-            } else {
+            } else if (destName) {
                 distEl.innerText = 'พร้อมนำทาง';
-                dirEl.innerText = 'กดปุ่มเริ่มนำทาง';
+                dirEl.innerText = destName;
+            } else {
+                distEl.innerText = '-';
+                dirEl.innerText = '-';
             }
         }
 
@@ -2275,29 +2786,33 @@
                 return;
             }
 
-            if (!currentModalData || !currentModalData.lat) {
-                speakThaiText('กรุณากดปุ่มนำทาง Google Maps เพื่อเริ่มนำทางครับ', true);
+            if (!currentModalData || !currentModalData.placeQuery) {
+                speakThaiText('กรุณาระบุจุดหมายปลายทางก่อนเริ่มนำทางครับ', true);
                 return;
             }
 
             isLiveNavRunning = true;
-            btnText.innerText = '⏹️ หยุดนำทาง';
+            btnText.innerText = '⏹️ หยุดเสียงนำทาง';
             badge.innerText = 'กำลังนำทางสด...';
 
             const announceStep = (lat, lng) => {
                 userCurrentCoords = { lat, lng };
-                const dist = calculateDistanceMeters(lat, lng, currentModalData.lat, currentModalData.lng);
-                const bearing = calculateBearingDegrees(lat, lng, currentModalData.lat, currentModalData.lng);
-                const dir = getCardinalDirectionTH(bearing);
+                if (currentModalData.lat && currentModalData.lng) {
+                    const dist = calculateDistanceMeters(lat, lng, currentModalData.lat, currentModalData.lng);
+                    const bearing = calculateBearingDegrees(lat, lng, currentModalData.lat, currentModalData.lng);
+                    const dir = getCardinalDirectionTH(bearing);
 
-                updateNavigationPanel(currentModalData.lat, currentModalData.lng, currentModalData.placeQuery);
+                    updateNavigationPanel(currentModalData.lat, currentModalData.lng, currentModalData.placeQuery);
 
-                if (dist <= 25) {
-                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                    speakThaiText(`ถึง ${currentModalData.placeQuery} เรียบร้อยแล้วครับ`, true);
-                    stopLiveVoiceNavigation();
+                    if (dist <= 25) {
+                        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                        speakThaiText(`ถึง ${currentModalData.placeQuery} เรียบร้อยแล้วครับ`, true);
+                        stopLiveVoiceNavigation();
+                    } else {
+                        speakThaiText(`มุ่งหน้าไปทาง${dir} ระยะทางอีก ${formatDistanceTH(dist)}`, false);
+                    }
                 } else {
-                    speakThaiText(`มุ่งหน้าไปทาง${dir} ระยะทางอีก ${formatDistanceTH(dist)}`, false);
+                    speakThaiText(`กำลังนำทางไปยัง ${currentModalData.placeQuery}`, false);
                 }
             };
 
@@ -2320,7 +2835,7 @@
             isLiveNavRunning = false;
             const btnText = document.getElementById('voice-nav-btn-text');
             const badge = document.getElementById('nav-live-badge');
-            if (btnText) btnText.innerText = '▶️ เริ่มนำทางด้วยเสียง';
+            if (btnText) btnText.innerText = '▶️ เสียงนำทาง';
             if (badge) badge.innerText = 'พร้อมนำทาง';
             if (liveNavWatchId !== null && navigator.geolocation) {
                 navigator.geolocation.clearWatch(liveNavWatchId);
@@ -2365,6 +2880,11 @@
             document.getElementById('modal-announcement-text').innerText = data.announcement;
             document.getElementById('modal-region').innerText = data.region;
             document.getElementById('modal-coords').innerText = data.coordsText;
+
+            const destInput = document.getElementById('destination-search-input');
+            if (destInput && data.placeQuery && !data.announcement.startsWith('ขณะนี้คุณอยู่ที่บริเวณ')) {
+                destInput.value = data.placeQuery;
+            }
 
             const exitEl = document.getElementById('modal-transit-exit-info');
             if (data.transitExit) {
